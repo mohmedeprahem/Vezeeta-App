@@ -15,5 +15,7 @@ namespace Core.Models
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string? Image { get; set; }
+        public int? SpecializationId { get; set; }
+        public Specialization Specialization { get; set; }
     }
 }
