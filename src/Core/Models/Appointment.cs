@@ -11,5 +11,7 @@ namespace Core.Models
         public int Id { get; set; }
         public string DoctorId { get; set; }
         public ApplicationUser Doctor { get; set; }
+        public int DayId { get; set; }
+        public AppointmentDay Day { get; set; }
     }
 }

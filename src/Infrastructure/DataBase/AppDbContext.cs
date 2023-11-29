@@ -19,6 +19,7 @@ namespace Infrastructure.DataBase
         public DbSet<ExaminationPrice> ExaminationPrices { get; set; }
         public DbSet<UserBookingTracking> UserBookingTracking { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<AppointmentDay> AppointmentDays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
