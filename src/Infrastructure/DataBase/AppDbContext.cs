@@ -20,6 +20,7 @@ namespace Infrastructure.DataBase
         public DbSet<UserBookingTracking> UserBookingTracking { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDay> AppointmentDays { get; set; }
+        public DbSet<AppointmentTime> AppointmentTimes { get; set; }
 
         public DbSet<Time> Times { get; set; }
 
