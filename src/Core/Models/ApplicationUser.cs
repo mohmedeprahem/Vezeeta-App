@@ -10,11 +10,10 @@ namespace Core.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName;
-        public string LastName;
-        public string Email;
-        public string Gender;
-        public DateTime DateOfBirth;
-        public string? Image;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string? Image { get; set; }
     }
 }
