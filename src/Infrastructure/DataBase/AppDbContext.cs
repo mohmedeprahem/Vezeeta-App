@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models;
+using Infrastructure.EntityConfiguration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,12 @@ namespace Infrastructure.DataBase
             : base(options) { }
 
         public DbSet<Specialization> Specializations { get; set; }
+        public DbSet<ExaminationPrice> ExaminationPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration<ExaminationPrice>(new ExaminationPriceEntityConfiguration());
         }
     }
 }
