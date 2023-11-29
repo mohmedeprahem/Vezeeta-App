@@ -21,8 +21,8 @@ namespace Infrastructure.DataBase
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDay> AppointmentDays { get; set; }
         public DbSet<AppointmentTime> AppointmentTimes { get; set; }
-
         public DbSet<Time> Times { get; set; }
+        public DbSet<DiscountType> DiscountTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

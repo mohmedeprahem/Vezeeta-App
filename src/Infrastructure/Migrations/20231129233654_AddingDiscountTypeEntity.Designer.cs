@@ -4,6 +4,7 @@ using Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129233654_AddingDiscountTypeEntity")]
+    partial class AddingDiscountTypeEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,34 +178,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TimeId");
 
                     b.ToTable("AppointmentTimes");
-                });
-
-            modelBuilder.Entity("Core.Models.Discount", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DiscountCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DiscountTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DiscountValue")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActivated")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiscountTypeId");
-
-                    b.ToTable("Discount");
                 });
 
             modelBuilder.Entity("Core.Models.DiscountType", b =>
@@ -462,17 +437,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Time");
                 });
 
-            modelBuilder.Entity("Core.Models.Discount", b =>
-                {
-                    b.HasOne("Core.Models.DiscountType", "DiscountType")
-                        .WithMany("Discounts")
-                        .HasForeignKey("DiscountTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DiscountType");
-                });
-
             modelBuilder.Entity("Core.Models.ExaminationPrice", b =>
                 {
                     b.HasOne("Core.Models.ApplicationUser", "Doctor")
@@ -565,11 +529,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.AppointmentDay", b =>
                 {
                     b.Navigation("Appointments");
-                });
-
-            modelBuilder.Entity("Core.Models.DiscountType", b =>
-                {
-                    b.Navigation("Discounts");
                 });
 
             modelBuilder.Entity("Core.Models.Specialization", b =>
