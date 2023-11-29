@@ -19,5 +19,6 @@ namespace Core.Models
         public Specialization Specialization { get; set; }
         public ExaminationPrice Price { get; set; }
         public UserBookingTracking AprovedBookingCount { get; set; }
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

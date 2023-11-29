@@ -18,6 +18,7 @@ namespace Infrastructure.DataBase
         public DbSet<Specialization> Specializations { get; set; }
         public DbSet<ExaminationPrice> ExaminationPrices { get; set; }
         public DbSet<UserBookingTracking> UserBookingTracking { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
