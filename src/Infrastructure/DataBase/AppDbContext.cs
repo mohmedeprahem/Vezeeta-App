@@ -21,6 +21,8 @@ namespace Infrastructure.DataBase
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDay> AppointmentDays { get; set; }
 
+        public DbSet<Time> Times { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
