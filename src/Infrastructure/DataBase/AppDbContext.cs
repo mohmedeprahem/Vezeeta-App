@@ -24,6 +24,7 @@ namespace Infrastructure.DataBase
         public DbSet<Time> Times { get; set; }
         public DbSet<DiscountType> DiscountTypes { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<BookingStatus> bookingStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
