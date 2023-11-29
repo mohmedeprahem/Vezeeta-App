@@ -17,6 +17,7 @@ namespace Core.Models
         public string? Image { get; set; }
         public int? SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
-        public virtual ExaminationPrice Price { get; set; }
+        public ExaminationPrice Price { get; set; }
+        public UserBookingTracking AprovedBookingCount { get; set; }
     }
 }

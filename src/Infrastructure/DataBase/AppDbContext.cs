@@ -17,11 +17,15 @@ namespace Infrastructure.DataBase
 
         public DbSet<Specialization> Specializations { get; set; }
         public DbSet<ExaminationPrice> ExaminationPrices { get; set; }
+        public DbSet<UserBookingTracking> UserBookingTracking { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration<ExaminationPrice>(new ExaminationPriceEntityConfiguration());
+            builder.ApplyConfiguration<UserBookingTracking>(
+                new UserBookingTrackingEntityConfiguration()
+            );
         }
     }
 }
