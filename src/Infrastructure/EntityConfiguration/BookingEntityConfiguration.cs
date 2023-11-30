@@ -16,11 +16,8 @@ namespace Infrastructure.EntityConfiguration
             builder
                 .HasOne(b => b.Patient)
                 .WithMany(u => u.PatientBookings)
-                .HasForeignKey(b => b.PatientId);
-            builder
-                .HasOne(b => b.Doctor)
-                .WithMany(u => u.DoctorBookings)
-                .HasForeignKey(b => b.DoctorId);
+                .HasForeignKey(b => b.PatientId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

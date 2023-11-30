@@ -194,15 +194,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DayId")
+                    b.Property<int?>("DiscountId")
                         .HasColumnType("int");
-
-                    b.Property<int?>("DiscountCodeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DoctorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("FinalPrice")
                         .HasColumnType("int");
@@ -214,22 +207,13 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("TimeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookingStatusId");
 
-                    b.HasIndex("DayId");
-
-                    b.HasIndex("DiscountCodeId");
-
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("DiscountId");
 
                     b.HasIndex("PatientId");
-
-                    b.HasIndex("TimeId");
 
                     b.ToTable("Bookings");
                 });
@@ -544,45 +528,21 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Models.AppointmentDay", "Day")
+                    b.HasOne("Core.Models.Discount", "Discount")
                         .WithMany("Bookings")
-                        .HasForeignKey("DayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Models.Discount", "DiscountCode")
-                        .WithMany("Bookings")
-                        .HasForeignKey("DiscountCodeId");
-
-                    b.HasOne("Core.Models.ApplicationUser", "Doctor")
-                        .WithMany("DoctorBookings")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiscountId");
 
                     b.HasOne("Core.Models.ApplicationUser", "Patient")
                         .WithMany("PatientBookings")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Models.Time", "Time")
-                        .WithMany("Bookings")
-                        .HasForeignKey("TimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BookingStatus");
 
-                    b.Navigation("Day");
-
-                    b.Navigation("DiscountCode");
-
-                    b.Navigation("Doctor");
+                    b.Navigation("Discount");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("Time");
                 });
 
             modelBuilder.Entity("Core.Models.Discount", b =>
@@ -676,8 +636,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("AprovedBookingCount")
                         .IsRequired();
 
-                    b.Navigation("DoctorBookings");
-
                     b.Navigation("PatientBookings");
 
                     b.Navigation("Price")
@@ -692,8 +650,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.AppointmentDay", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Core.Models.BookingStatus", b =>
@@ -719,8 +675,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.Time", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

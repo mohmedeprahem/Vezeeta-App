@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingBookingEntity : Migration
+    public partial class RemoveBookingRelationWithTimesDaysDockor : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,11 +18,8 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BookingStatusId = table.Column<int>(type: "int", nullable: false),
-                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PatientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DiscountCodeId = table.Column<int>(type: "int", nullable: true),
-                    DayId = table.Column<int>(type: "int", nullable: false),
-                    TimeId = table.Column<int>(type: "int", nullable: false),
+                    DiscountId = table.Column<int>(type: "int", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
@@ -32,34 +29,15 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookings_AppointmentDays_DayId",
-                        column: x => x.DayId,
-                        principalTable: "AppointmentDays",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Bookings_AspNetUsers_PatientId",
                         column: x => x.PatientId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Discounts_DiscountCodeId",
-                        column: x => x.DiscountCodeId,
-                        principalTable: "Discounts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Bookings_Times_TimeId",
-                        column: x => x.TimeId,
-                        principalTable: "Times",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Bookings_Discounts_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discounts",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_bookingStatuses_BookingStatusId",
                         column: x => x.BookingStatusId,
@@ -74,29 +52,14 @@ namespace Infrastructure.Migrations
                 column: "BookingStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_DayId",
+                name: "IX_Bookings_DiscountId",
                 table: "Bookings",
-                column: "DayId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_DiscountCodeId",
-                table: "Bookings",
-                column: "DiscountCodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_DoctorId",
-                table: "Bookings",
-                column: "DoctorId");
+                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_PatientId",
                 table: "Bookings",
                 column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_TimeId",
-                table: "Bookings",
-                column: "TimeId");
         }
 
         /// <inheritdoc />

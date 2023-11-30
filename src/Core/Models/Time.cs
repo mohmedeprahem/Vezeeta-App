@@ -11,6 +11,5 @@ namespace Core.Models
         public int Id { get; set; }
         public string TimeValue { get; set; }
         public ICollection<AppointmentTime> Appointments { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
     }
 }
