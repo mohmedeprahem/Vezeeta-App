@@ -25,6 +25,7 @@ namespace Infrastructure.DataBase
         public DbSet<DiscountType> DiscountTypes { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<BookingStatus> bookingStatuses { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -33,6 +34,7 @@ namespace Infrastructure.DataBase
             builder.ApplyConfiguration<UserBookingTracking>(
                 new UserBookingTrackingEntityConfiguration()
             );
+            builder.ApplyConfiguration<Booking>(new BookingEntityConfiguration());
         }
     }
 }

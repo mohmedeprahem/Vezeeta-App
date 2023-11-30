@@ -9,19 +9,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.EntityConfiguration
 {
-    internal class UserBookingTrackingEntityConfiguration
-        : IEntityTypeConfiguration<UserBookingTracking>
+    internal class BookingEntityConfiguration : IEntityTypeConfiguration<Booking>
     {
-        public void Configure(EntityTypeBuilder<UserBookingTracking> builder)
+        public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.HasKey(bt => bt.PatientId);
-
             builder
-                .HasOne(bt => bt.Patient)
-                .WithOne(u => u.AprovedBookingCount)
-                .HasForeignKey<UserBookingTracking>(ep => ep.PatientId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(b => b.Patient)
+                .WithMany(u => u.PatientBookings)
+                .HasForeignKey(b => b.PatientId);
+            builder
+                .HasOne(b => b.Doctor)
+                .WithMany(u => u.DoctorBookings)
+                .HasForeignKey(b => b.DoctorId);
         }
     }
 }

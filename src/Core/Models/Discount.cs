@@ -14,5 +14,6 @@ namespace Core.Models
         public bool IsActivated { get; set; }
         public int DiscountValue { get; set; }
         public DiscountType DiscountType { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }

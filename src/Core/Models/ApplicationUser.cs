@@ -20,5 +20,7 @@ namespace Core.Models
         public ExaminationPrice Price { get; set; }
         public UserBookingTracking AprovedBookingCount { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Booking> DoctorBookings { get; set; }
+        public ICollection<Booking> PatientBookings { get; set; }
     }
 }
