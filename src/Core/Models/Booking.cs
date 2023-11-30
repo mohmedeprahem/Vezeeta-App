@@ -9,6 +9,7 @@ namespace Core.Models
     public class Booking
     {
         public int Id { get; set; }
+        public int AppointmentTimeId { get; set; }
         public int BookingStatusId { get; set; }
         public string PatientId { get; set; }
         public int? DiscountId { get; set; }
@@ -19,5 +20,6 @@ namespace Core.Models
         public BookingStatus BookingStatus { get; set; }
         public ApplicationUser Patient { get; set; }
         public Discount Discount { get; set; }
+        public AppointmentTime AppointmentTime { get; set; }
     }
 }

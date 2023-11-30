@@ -14,5 +14,6 @@ namespace Core.Models
         public bool IsBooked { get; set; }
         public Appointment Appointment { get; set; }
         public Time Time { get; set; }
+        public Booking Booking { get; set; }
     }
 }
