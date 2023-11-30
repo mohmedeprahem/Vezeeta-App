@@ -19,7 +19,7 @@ namespace Infrastructure.DataBase
         public DbSet<ExaminationPrice> ExaminationPrices { get; set; }
         public DbSet<UserBookingTracking> UserBookingTracking { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<AppointmentDay> AppointmentDays { get; set; }
+        public DbSet<Day> Days { get; set; }
         public DbSet<AppointmentTime> AppointmentTimes { get; set; }
         public DbSet<Time> Times { get; set; }
         public DbSet<DiscountType> DiscountTypes { get; set; }

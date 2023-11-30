@@ -13,6 +13,6 @@ namespace Core.Models
         public int DayId { get; set; }
         public ICollection<AppointmentTime> Times { get; set; }
         public ApplicationUser Doctor { get; set; }
-        public AppointmentDay Day { get; set; }
+        public Day Day { get; set; }
     }
 }

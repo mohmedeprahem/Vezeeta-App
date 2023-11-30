@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class AppointmentDay
+    public class Day
     {
         public int Id { get; set; }
         public string Name { get; set; }
