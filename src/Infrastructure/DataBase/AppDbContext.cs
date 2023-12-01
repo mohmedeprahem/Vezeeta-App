@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models;
@@ -35,6 +37,7 @@ namespace Infrastructure.DataBase
                 new UserBookingTrackingEntityConfiguration()
             );
             builder.ApplyConfiguration<Booking>(new BookingEntityConfiguration());
+            builder.ApplyConfiguration<ApplicationUser>(new ApplicationUserEntityConfiguration());
         }
     }
 }
