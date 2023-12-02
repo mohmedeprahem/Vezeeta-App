@@ -45,6 +45,7 @@ namespace Infrastructure.DataBase
             builder.ApplyConfiguration<BookingStatus>(
                 new BookingStatusEntityConfiguration(new EnumService())
             );
+            builder.ApplyConfiguration<Day>(new DayEntityConfiguration(new EnumService()));
         }
     }
 }
