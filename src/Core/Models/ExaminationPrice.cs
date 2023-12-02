@@ -12,6 +12,8 @@ namespace Core.Models
     {
         public string DoctorId { get; set; }
         public ApplicationUser Doctor { get; set; }
+
+        [Range(0, int.MaxValue)]
         public int price { get; set; }
     }
 }
