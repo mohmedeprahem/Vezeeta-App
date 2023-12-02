@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231202192949_test")]
-    partial class test
+    [Migration("20231202211253_ChangebookingStatusName")]
+    partial class ChangebookingStatusName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,26 +116,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", null, t =>
                         {
                             t.HasCheckConstraint("CK_AspNetUsers_Gender", "Gender IN ('Male', 'Female')");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a3a82e8e-6043-4084-b4ce-f6f87e3e1ef5",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "a4f950c0-2067-4443-bf5a-f54c6c540b8d",
-                            DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@localhost",
-                            EmailConfirmed = true,
-                            FirstName = "mohamed",
-                            Gender = "Male",
-                            LastName = "ibrahem",
-                            LockoutEnabled = false,
-                            PasswordHash = "admin",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "259bb56f-4605-4ff8-932e-151c59a0a29c",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
                         });
                 });
 
@@ -253,7 +233,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("bookingStatuses", t =>
+                    b.ToTable("BookingStatuses", t =>
                         {
                             t.HasCheckConstraint("CK_BookingStatuses_Name", "Name IN ('Binding', 'Completed', 'Cancelled')");
                         });

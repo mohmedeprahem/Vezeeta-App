@@ -29,7 +29,7 @@ namespace Infrastructure.DataBase.Context
         public DbSet<Time> Times { get; set; }
         public DbSet<DiscountType> DiscountTypes { get; set; }
         public DbSet<Discount> Discounts { get; set; }
-        public DbSet<BookingStatus> bookingStatuses { get; set; }
+        public DbSet<BookingStatus> BookingStatuses { get; set; }
         public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

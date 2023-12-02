@@ -63,14 +63,14 @@ namespace Infrastructure.DataBase.Etension
             }
 
             // Seed BookingStatus
-            if (!context.bookingStatuses.Any())
+            if (!context.BookingStatuses.Any())
             {
                 foreach (
                     var status in Enum.GetValues(typeof(BookingStatusEnum))
                         .Cast<BookingStatusEnum>()
                 )
                 {
-                    await context.bookingStatuses.AddAsync(new BookingStatus { Name = status });
+                    await context.BookingStatuses.AddAsync(new BookingStatus { Name = status });
                 }
             }
 
