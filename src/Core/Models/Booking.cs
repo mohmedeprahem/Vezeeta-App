@@ -15,7 +15,7 @@ namespace Core.Models
         public string PatientId { get; set; }
         public int? DiscountId { get; set; }
         public DateOnly Date { get; set; }
-        public DateTime CreatedAt { get; private set; } = DateTime.Now;
+        public DateTime CreatedAt { get; private set; }
 
         [Range(0, int.MaxValue)]
         public int Price { get; set; }

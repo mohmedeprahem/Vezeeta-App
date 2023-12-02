@@ -24,6 +24,7 @@ namespace Infrastructure.Migrations
                 table: "Bookings",
                 type: "datetime2",
                 nullable: false,
+                computedColumnSql: "getutcdate()",
                 oldClrType: typeof(int),
                 oldType: "int");
         }
@@ -45,7 +46,8 @@ namespace Infrastructure.Migrations
                 type: "int",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "datetime2");
+                oldType: "datetime2",
+                oldComputedColumnSql: "getutcdate()");
         }
     }
 }

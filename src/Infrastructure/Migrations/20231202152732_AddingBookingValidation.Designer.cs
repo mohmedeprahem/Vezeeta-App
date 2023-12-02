@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231202151606_AddingBookingValidation")]
+    [Migration("20231202152732_AddingBookingValidation")]
     partial class AddingBookingValidation
     {
         /// <inheritdoc />
@@ -184,7 +184,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");

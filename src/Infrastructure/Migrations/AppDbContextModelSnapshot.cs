@@ -181,7 +181,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasComputedColumnSql("getutcdate()");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
