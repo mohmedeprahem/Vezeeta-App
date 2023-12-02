@@ -1,5 +1,6 @@
 using Core.Models;
 using Infrastructure.DataBase.Context;
+using Infrastructure.DataBase.Etension;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,5 +45,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Seeder.Seed(app);
 
 app.Run();
