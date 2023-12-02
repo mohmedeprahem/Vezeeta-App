@@ -30,7 +30,8 @@ namespace Infrastructure.EntityConfiguration
             );
 
             builder.ToTable(
-                table => table.HasCheckConstraint("CK_AspNetUsers_Gender", BookingStatusConstraint)
+                table =>
+                    table.HasCheckConstraint("CK_BookingStatuses_Name", BookingStatusConstraint)
             );
         }
     }
