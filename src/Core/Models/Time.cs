@@ -13,7 +13,7 @@ namespace Core.Models
 
         [DataType(DataType.Time)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:h:mm tt}")]
-        public DateTime TimeValue { get; set; }
+        public TimeOnly TimeValue { get; set; }
         public ICollection<AppointmentTime> Appointments { get; set; }
     }
 }
