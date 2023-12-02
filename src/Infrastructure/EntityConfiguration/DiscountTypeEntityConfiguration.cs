@@ -11,24 +11,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.EntityConfiguration
 {
-    internal class BookingStatusEntityConfiguration : IEntityTypeConfiguration<BookingStatus>
+    internal class DiscountTypeEntityConfiguration : IEntityTypeConfiguration<DiscountType>
     {
         private IEnumService _enumService;
 
-        public BookingStatusEntityConfiguration(IEnumService enumService)
+        public DiscountTypeEntityConfiguration(IEnumService enumService)
         {
             _enumService = enumService;
         }
 
-        public void Configure(EntityTypeBuilder<BookingStatus> builder)
+        public void Configure(EntityTypeBuilder<DiscountType> builder)
         {
-            builder.Property(bs => bs.Name).HasConversion<string>().HasMaxLength(20);
+            builder.Property(dt => dt.Name).HasConversion<string>().HasMaxLength(20);
 
             // Create a constraint for the Gender enum
-            string NameConstraint = _enumService.GetEnumCheckConstraint<BookingStatusEnum>("Name");
+            string NameConstraint = _enumService.GetEnumCheckConstraint<DiscountTypeEnum>("Name");
 
             builder.ToTable(
-                table => table.HasCheckConstraint("CK_BookingStatuses_Name", NameConstraint)
+                table => table.HasCheckConstraint("CK_DiscountTypes_Name", NameConstraint)
             );
         }
     }

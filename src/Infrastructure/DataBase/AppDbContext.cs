@@ -46,6 +46,9 @@ namespace Infrastructure.DataBase
                 new BookingStatusEntityConfiguration(new EnumService())
             );
             builder.ApplyConfiguration<Day>(new DayEntityConfiguration(new EnumService()));
+            builder.ApplyConfiguration<DiscountType>(
+                new DiscountTypeEntityConfiguration(new EnumService())
+            );
         }
     }
 }

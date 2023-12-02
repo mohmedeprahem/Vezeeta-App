@@ -22,7 +22,7 @@ namespace Infrastructure.EntityConfiguration
 
         public void Configure(EntityTypeBuilder<Day> builder)
         {
-            builder.Property(bs => bs.Name).HasConversion<string>().HasMaxLength(20);
+            builder.Property(d => d.Name).HasConversion<string>().HasMaxLength(20);
 
             // Create a constraint for the Gender enum
             string DayConstraint = _enumService.GetEnumCheckConstraint<DaysEnum>("Name");
