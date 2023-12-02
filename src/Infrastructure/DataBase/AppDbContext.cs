@@ -6,7 +6,9 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models;
+using Core.Services;
 using Infrastructure.EntityConfiguration;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +39,9 @@ namespace Infrastructure.DataBase
                 new UserBookingTrackingEntityConfiguration()
             );
             builder.ApplyConfiguration<Booking>(new BookingEntityConfiguration());
-            builder.ApplyConfiguration<ApplicationUser>(new ApplicationUserEntityConfiguration());
+            builder.ApplyConfiguration<ApplicationUser>(
+                new ApplicationUserEntityConfiguration(new EnumService())
+            );
         }
     }
 }
