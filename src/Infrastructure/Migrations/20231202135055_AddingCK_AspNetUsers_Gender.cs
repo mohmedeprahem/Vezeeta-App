@@ -12,8 +12,9 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.AddCheckConstraint(
                 name: "CK_AspNetUsers_Gender",
-                table: "AspNetUsers",
-                sql: "Gender IN ('Male', 'Female')");
+                table: "",
+                sql: "Gender IN ('Male', 'Female')"
+            );
         }
 
         /// <inheritdoc />
@@ -21,7 +22,8 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.DropCheckConstraint(
                 name: "CK_AspNetUsers_Gender",
-                table: "AspNetUsers");
+                table: "AspNetUsers"
+            );
         }
     }
 }
