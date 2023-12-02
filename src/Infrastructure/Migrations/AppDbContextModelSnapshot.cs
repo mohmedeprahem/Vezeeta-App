@@ -137,7 +137,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.AppointmentTime", b =>
@@ -163,7 +163,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TimeId");
 
-                    b.ToTable("AppointmentTimes");
+                    b.ToTable("AppointmentTimes", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Booking", b =>
@@ -212,7 +212,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.BookingStatus", b =>
@@ -230,7 +230,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("bookingStatuses", t =>
+                    b.ToTable("bookingStatuses", null, t =>
                         {
                             t.HasCheckConstraint("CK_BookingStatuses_Name", "Name IN ('Binding', 'Completed', 'Cancelled')");
                         });
@@ -251,7 +251,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Days", t =>
+                    b.ToTable("Days", null, t =>
                         {
                             t.HasCheckConstraint("CK_Days_Name", "Name IN ('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')");
                         });
@@ -282,7 +282,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DiscountTypeId");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discounts", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.DiscountType", b =>
@@ -300,7 +300,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiscountTypes", t =>
+                    b.ToTable("DiscountTypes", null, t =>
                         {
                             t.HasCheckConstraint("CK_DiscountTypes_Name", "Name IN ('Percentage', 'Value')");
                         });
@@ -316,7 +316,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("DoctorId");
 
-                    b.ToTable("ExaminationPrices");
+                    b.ToTable("ExaminationPrices", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Specialization", b =>
@@ -334,7 +334,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specializations", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Time", b =>
@@ -350,7 +350,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Times");
+                    b.ToTable("Times", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.UserBookingTracking", b =>
@@ -363,7 +363,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("PatientId");
 
-                    b.ToTable("UserBookingTracking");
+                    b.ToTable("UserBookingTracking", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
