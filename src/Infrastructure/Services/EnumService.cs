@@ -9,7 +9,7 @@ namespace Infrastructure.Services
 {
     internal class EnumService : IEnumService
     {
-        public string GetEnumCheckConstraint<TEnum>()
+        public string GetEnumCheckConstraint<TEnum>(string property)
             where TEnum : Enum
         {
             // Get names of enum values and join them into a comma-separated string
@@ -17,7 +17,7 @@ namespace Infrastructure.Services
             string enumNamesString = string.Join(", ", enumNames.Select(name => $"'{name}'"));
 
             // Create the check constraint string
-            return $"Gender IN ({enumNamesString})";
+            return $"{property} IN ({enumNamesString})";
         }
     }
 }

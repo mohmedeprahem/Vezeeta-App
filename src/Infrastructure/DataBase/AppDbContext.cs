@@ -42,6 +42,9 @@ namespace Infrastructure.DataBase
             builder.ApplyConfiguration<ApplicationUser>(
                 new ApplicationUserEntityConfiguration(new EnumService())
             );
+            builder.ApplyConfiguration<BookingStatus>(
+                new BookingStatusEntityConfiguration(new EnumService())
+            );
         }
     }
 }

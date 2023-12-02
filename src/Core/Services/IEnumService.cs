@@ -8,7 +8,7 @@ namespace Core.Services
 {
     public interface IEnumService
     {
-        public string GetEnumCheckConstraint<TEnum>()
+        public string GetEnumCheckConstraint<TEnum>(string property)
             where TEnum : Enum;
     }
 }

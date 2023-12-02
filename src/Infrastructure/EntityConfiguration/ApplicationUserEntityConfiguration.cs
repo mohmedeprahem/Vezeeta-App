@@ -28,7 +28,7 @@ namespace Infrastructure.EntityConfiguration
             builder.Property(u => u.Gender).HasConversion<string>().HasMaxLength(20);
 
             // Create a constraint for the Gender enum
-            string genderConstraint = _enumService.GetEnumCheckConstraint<Genders>();
+            string genderConstraint = _enumService.GetEnumCheckConstraint<Genders>("Gender");
 
             builder.ToTable(
                 table => table.HasCheckConstraint("CK_AspNetUsers_Gender", genderConstraint)
