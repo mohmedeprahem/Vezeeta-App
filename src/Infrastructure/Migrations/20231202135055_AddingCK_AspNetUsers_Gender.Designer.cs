@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231202133053_test")]
-    partial class test
+    [Migration("20231202135055_AddingCK_AspNetUsers_Gender")]
+    partial class AddingCK_AspNetUsers_Gender
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("AspNetUsers", null, t =>
                         {
-                            t.HasCheckConstraint("CK_AspNetUsers_Gender", "Gender in (Male, Female)");
+                            t.HasCheckConstraint("CK_AspNetUsers_Gender", "Gender IN ('Male', 'Female')");
                         });
                 });
 

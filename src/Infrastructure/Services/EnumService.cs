@@ -14,10 +14,10 @@ namespace Infrastructure.Services
         {
             // Get names of enum values and join them into a comma-separated string
             string[] enumNames = Enum.GetNames(typeof(TEnum));
-            string enumNamesString = string.Join(", ", enumNames);
+            string enumNamesString = string.Join(", ", enumNames.Select(name => $"'{name}'"));
 
             // Create the check constraint string
-            return $"Gender in ({enumNamesString})";
+            return $"Gender IN ({enumNamesString})";
         }
     }
 }

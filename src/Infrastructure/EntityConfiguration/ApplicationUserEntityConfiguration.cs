@@ -30,7 +30,9 @@ namespace Infrastructure.EntityConfiguration
             // Create a constraint for the Gender enum
             string genderConstraint = _enumService.GetEnumCheckConstraint<Genders>();
 
-            builder.ToTable(b => b.HasCheckConstraint("CK_AspNetUsers_Gender", genderConstraint));
+            builder.ToTable(
+                table => table.HasCheckConstraint("CK_AspNetUsers_Gender", genderConstraint)
+            );
         }
     }
 }

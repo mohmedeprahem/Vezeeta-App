@@ -4,6 +4,7 @@ using Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231202133953_RemoveCK_AspNetUsers_Gender")]
+    partial class RemoveCK_AspNetUsers_Gender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,10 +113,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SpecializationId");
 
-                    b.ToTable("AspNetUsers", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_AspNetUsers_Gender", "Gender IN ('Male', 'Female')");
-                        });
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Appointment", b =>
