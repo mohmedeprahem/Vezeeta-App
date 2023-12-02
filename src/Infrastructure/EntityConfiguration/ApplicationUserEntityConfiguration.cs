@@ -33,6 +33,8 @@ namespace Infrastructure.EntityConfiguration
             builder.ToTable(
                 table => table.HasCheckConstraint("CK_AspNetUsers_Gender", genderConstraint)
             );
+
+            builder.HasIndex(u => u.Email).IsUnique();
         }
     }
 }

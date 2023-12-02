@@ -22,6 +22,9 @@ namespace Core.Models
 
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        public override string Email { get; set; }
         public string? Image { get; set; }
         public int? SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
