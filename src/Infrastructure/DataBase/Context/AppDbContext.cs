@@ -12,7 +12,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.DataBase
+namespace Infrastructure.DataBase.Context
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -34,21 +34,13 @@ namespace Infrastructure.DataBase
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration<ExaminationPrice>(new ExaminationPriceEntityConfiguration());
-            builder.ApplyConfiguration<UserBookingTracking>(
-                new UserBookingTrackingEntityConfiguration()
-            );
-            builder.ApplyConfiguration<Booking>(new BookingEntityConfiguration());
-            builder.ApplyConfiguration<ApplicationUser>(
-                new ApplicationUserEntityConfiguration(new EnumService())
-            );
-            builder.ApplyConfiguration<BookingStatus>(
-                new BookingStatusEntityConfiguration(new EnumService())
-            );
-            builder.ApplyConfiguration<Day>(new DayEntityConfiguration(new EnumService()));
-            builder.ApplyConfiguration<DiscountType>(
-                new DiscountTypeEntityConfiguration(new EnumService())
-            );
+            builder.ApplyConfiguration(new ExaminationPriceEntityConfiguration());
+            builder.ApplyConfiguration(new UserBookingTrackingEntityConfiguration());
+            builder.ApplyConfiguration(new BookingEntityConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserEntityConfiguration(new EnumService()));
+            builder.ApplyConfiguration(new BookingStatusEntityConfiguration(new EnumService()));
+            builder.ApplyConfiguration(new DayEntityConfiguration(new EnumService()));
+            builder.ApplyConfiguration(new DiscountTypeEntityConfiguration(new EnumService()));
         }
     }
 }

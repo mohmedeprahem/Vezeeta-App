@@ -1,5 +1,5 @@
 using Core.Models;
-using Infrastructure.DataBase;
+using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
