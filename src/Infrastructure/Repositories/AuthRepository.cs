@@ -26,18 +26,25 @@ namespace Infrastructure.Repositories
 
         public async Task<IdentityResult> Register(ApplicationUser user, string password)
         {
-            user.UserName = user.Email;
-            IdentityResult resultStatus = await _userManager.CreateAsync(user, password);
-            if (resultStatus.Succeeded)
+            try
             {
-                IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(
-                    user,
-                    RolesEnum.Patient.ToString()
-                );
-                await _userManager.DeleteAsync(user);
-            }
+                user.UserName = user.Email;
+                IdentityResult resultStatus = await _userManager.CreateAsync(user, password);
+                if (resultStatus.Succeeded)
+                {
+                    IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(
+                        user,
+                        RolesEnum.Patient.ToString()
+                    );
+                }
 
-            return resultStatus;
+                return resultStatus;
+            }
+            catch (InvalidOperationException ex)
+            {
+                await _userManager.DeleteAsync(user);
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
