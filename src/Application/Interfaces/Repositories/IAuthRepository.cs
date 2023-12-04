@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Core.Repositories
+namespace Application.Repositories
 {
     public interface IAuthRepository
     {
