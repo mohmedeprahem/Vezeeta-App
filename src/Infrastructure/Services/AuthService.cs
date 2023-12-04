@@ -52,6 +52,7 @@ namespace Infrastructure.Services
                     File.Delete(imagePath);
                 }
             }
+
             return result;
         }
     }
