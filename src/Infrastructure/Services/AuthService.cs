@@ -29,7 +29,7 @@ namespace Infrastructure.Services
             this._fileService = fileService;
         }
 
-        public async Task<IdentityResult> RegisterUser(RegisterDto model)
+        public async Task<IdentityResult> Register(RegisterDto model)
         {
             string imageName = string.Empty;
             string SavePath = string.Empty;

@@ -51,7 +51,7 @@ namespace Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await _authService.RegisterUser(registerDto);
+            IdentityResult result = await _authService.Register(registerDto);
 
             if (result.Succeeded)
             {

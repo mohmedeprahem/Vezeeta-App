@@ -11,6 +11,6 @@ namespace Application.Services
 {
     public interface IAuthService
     {
-        public Task<IdentityResult> RegisterUser(RegisterDto model);
+        public Task<IdentityResult> Register(RegisterDto model);
     }
 }
