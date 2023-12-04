@@ -46,6 +46,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Seeder.Seed(app);
+Seeder.Seed(app).Wait();
 
 app.Run();

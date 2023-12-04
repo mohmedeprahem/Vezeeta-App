@@ -15,7 +15,7 @@ namespace Infrastructure.DataBase.Etension
 {
     public static class Seeder
     {
-        public static async void Seed(IApplicationBuilder applicationBuilder)
+        public static async Task Seed(IApplicationBuilder applicationBuilder)
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
 
@@ -43,13 +43,11 @@ namespace Infrastructure.DataBase.Etension
             var roleManager = serviceScope
                 .ServiceProvider
                 .GetRequiredService<RoleManager<IdentityRole>>();
-
-            if (!await roleManager.RoleExistsAsync("Admin"))
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-            if (!await roleManager.RoleExistsAsync("Patient"))
-                await roleManager.CreateAsync(new IdentityRole("Patient"));
-            if (!await roleManager.RoleExistsAsync("Doctor"))
-                await roleManager.CreateAsync(new IdentityRole("Doctor"));
+            foreach (string role in Enum.GetNames(typeof(RolesEnum)))
+            {
+                if (!await roleManager.RoleExistsAsync(role.ToString()))
+                    await roleManager.CreateAsync(new IdentityRole(role.ToString()));
+            }
 
             var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
 
