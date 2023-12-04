@@ -18,7 +18,7 @@ namespace Core.Models
         [StringLength(50, MinimumLength = 3)]
         public string LastName { get; set; }
 
-        public Genders Gender { get; set; }
+        public GendersEnum Gender { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
