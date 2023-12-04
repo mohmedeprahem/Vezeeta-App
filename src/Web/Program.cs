@@ -1,3 +1,4 @@
+using Application.Mappers;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Infrastructure.DataBase.Etension;
@@ -27,6 +28,9 @@ builder
     .AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
+// Add automapper
+builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -46,6 +50,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Seed data in database
 Seeder.Seed(app).Wait();
 
 app.Run();
