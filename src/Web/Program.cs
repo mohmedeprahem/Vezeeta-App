@@ -1,9 +1,11 @@
+using Application.Interfaces.Services;
 using Application.Mappers;
 using Application.Repositories;
 using Application.Services;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Infrastructure.DataBase.Etension;
+using Infrastructure.Helpers;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,7 @@ builder
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));

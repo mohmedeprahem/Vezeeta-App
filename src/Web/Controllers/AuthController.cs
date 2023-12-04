@@ -22,16 +22,48 @@ namespace Web.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
+            // Validate image
+            if (registerDto.Image != null)
+            {
+                long fileSize = registerDto.Image.Length;
+
+                if (
+                    registerDto.Image.ContentType != "image/jpeg"
+                    && registerDto.Image.ContentType != "image/png"
+                )
+                {
+                    ModelState.AddModelError(
+                        "Image",
+                        "Invalid image format. Only JPEG and PNG are allowed."
+                    );
+                }
+                else if (fileSize > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError(
+                        "Image",
+                        "Invalid image size. The maximum allowed size is 5 MB."
+                    );
+                }
+            }
+
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
+
             IdentityResult result = await _authService.RegisterUser(registerDto);
 
-            return Created(
-                "User registered successfully",
-                new { success = true, statusCode = 201 }
-            );
+            if (result.Succeeded)
+            {
+                return Created(
+                    "User registered successfully",
+                    new { success = true, statusCode = 201 }
+                );
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
     }
 }
