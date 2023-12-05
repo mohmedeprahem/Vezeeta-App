@@ -19,26 +19,6 @@ namespace Infrastructure.DataBase.Etension
         {
             using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
 
-            // Seed Admin user
-            var userManager = serviceScope
-                .ServiceProvider
-                .GetRequiredService<UserManager<ApplicationUser>>();
-
-            if (!userManager.Users.Any(u => u.Email == "admin@localhost.com"))
-            {
-                await userManager.CreateAsync(
-                    new ApplicationUser
-                    {
-                        FirstName = "mohamed",
-                        LastName = "ibrahem",
-                        UserName = "admin",
-                        Email = "admin@localhost.com",
-                        EmailConfirmed = true,
-                        PasswordHash = "admin@localhost"
-                    }
-                );
-            }
-
             // Seed roles
             var roleManager = serviceScope
                 .ServiceProvider
@@ -50,6 +30,35 @@ namespace Infrastructure.DataBase.Etension
             }
 
             var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+
+            // Seed Admin user
+            var userManager = serviceScope
+                .ServiceProvider
+                .GetRequiredService<UserManager<ApplicationUser>>();
+
+            if (!userManager.Users.Any(u => u.Email == "admin@localhost.com"))
+            {
+                // Create a new user
+                ApplicationUser adminUser = new ApplicationUser
+                {
+                    FirstName = "Mohamed",
+                    LastName = "Ibrahem",
+                    UserName = "admin",
+                    Email = "admin@localhost.com",
+                    EmailConfirmed = true,
+                };
+
+                IdentityResult createResult = await userManager.CreateAsync(
+                    adminUser,
+                    "@Mohmed123"
+                );
+
+                if (createResult.Succeeded)
+                {
+                    // If user creation is successful, assign a role to the user (assuming you have a role called "Admin")
+                    await userManager.AddToRoleAsync(adminUser, RolesEnum.Admin.ToString());
+                }
+            }
 
             // Seed days
             if (!context.Days.Any())
