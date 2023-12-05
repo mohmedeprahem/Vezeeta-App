@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -18,6 +19,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(policy: "AdminOnly")]
         public async Task<IActionResult> GetPatients(
             [FromQuery] int page = 1,
             [FromQuery] int size = 1
