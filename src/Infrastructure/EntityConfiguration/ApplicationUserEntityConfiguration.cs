@@ -35,6 +35,11 @@ namespace Infrastructure.EntityConfiguration
             );
 
             builder.HasIndex(u => u.Email).IsUnique();
+
+            builder
+                .Property(u => u.FullName)
+                .HasComputedColumnSql("[FirstName] + ' ' + [LastName]")
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }
