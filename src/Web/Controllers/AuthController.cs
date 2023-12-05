@@ -99,7 +99,7 @@ namespace Web.Controllers
                 };
 
                 // Set jwt in cookie
-                HttpContext.Response.Cookies.Append("jwtToken", $"Bearer {token}", cookieOptions);
+                HttpContext.Response.Cookies.Append("JwtToken", token, cookieOptions);
 
                 return Created(
                     "",

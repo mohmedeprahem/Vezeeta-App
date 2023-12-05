@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -10,7 +11,9 @@ using Infrastructure.DataBase.Etension;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -64,10 +67,17 @@ builder
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["jwtToken"];
+                context.Token = context.Request.Cookies["JwtToken"];
                 return Task.CompletedTask;
             }
         };
+    });
+
+builder
+    .Services
+    .AddAuthorization(options =>
+    {
+        options.AddPolicy("AdminOnly", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
     });
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
