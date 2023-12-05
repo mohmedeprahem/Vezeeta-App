@@ -1,9 +1,10 @@
 ﻿using Application.Dtos;
+using Application.Interfaces.Services;
 using Application.Services;
-using Microsoft.AspNetCore.Http;
+using Azure;
+using Core.Authentications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Web.Controllers
 {
@@ -12,10 +13,12 @@ namespace Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IJwtTokenService _jwtTokenService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IJwtTokenService jwtTokenService)
         {
             this._authService = authService;
+            this._jwtTokenService = jwtTokenService;
         }
 
         [HttpPost]
@@ -63,6 +66,54 @@ namespace Web.Controllers
             else
             {
                 return BadRequest(result);
+            }
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                AuthenticationResult authResult = await _authService.Login(loginDto);
+
+                if (!authResult.Success)
+                {
+                    return BadRequest("Invalid email or password");
+                }
+
+                // Generate JWT
+                string token = _jwtTokenService.GenerateToken(authResult.User, authResult.Roles[0]);
+
+                CookieOptions cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddMonths(3),
+                    SameSite = SameSiteMode.Strict,
+                    Secure = true
+                };
+
+                // Set jwt in cookie
+                HttpContext.Response.Cookies.Append("jwtToken", $"Bearer {token}", cookieOptions);
+
+                return Created(
+                    "",
+                    new
+                    {
+                        success = true,
+                        statusCode = 201,
+                        token
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
             }
         }
     }

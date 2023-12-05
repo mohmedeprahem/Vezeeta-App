@@ -8,6 +8,7 @@ using Application.Interfaces.Services;
 using Application.Repositories;
 using Application.Services;
 using AutoMapper;
+using Core.Authentications;
 using Core.Models;
 using Infrastructure.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +55,16 @@ namespace Infrastructure.Services
             }
 
             return result;
+        }
+
+        public async Task<AuthenticationResult> Login(LoginDto model)
+        {
+            AuthenticationResult authResult = await _authRepository.Login(
+                model.Email,
+                model.Password
+            );
+
+            return authResult;
         }
     }
 }
