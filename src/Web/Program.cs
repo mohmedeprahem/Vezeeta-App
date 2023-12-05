@@ -1,4 +1,5 @@
 using System.Text;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappers;
 using Application.Repositories;
@@ -73,6 +74,8 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
