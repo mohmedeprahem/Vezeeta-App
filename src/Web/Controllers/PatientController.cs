@@ -11,11 +11,11 @@ namespace Web.Controllers
     [ApiController]
     public class PatientController : Controller
     {
-        private readonly IPatientService _patientRepository;
+        private readonly IPatientService _patientService;
 
-        public PatientController(IPatientService patientRepository)
+        public PatientController(IPatientService patientService)
         {
-            this._patientRepository = patientRepository;
+            this._patientService = patientService;
         }
 
         [HttpGet]
@@ -33,10 +33,7 @@ namespace Web.Controllers
                 }
 
                 // Get patients
-                List<ApplicationUser> patientsInfo = await _patientRepository.GetPatients(
-                    page,
-                    size
-                );
+                List<ApplicationUser> patientsInfo = await _patientService.GetPatients(page, size);
 
                 if (patientsInfo == null)
                 {
@@ -59,7 +56,7 @@ namespace Web.Controllers
                     .ToList();
 
                 // Get total number of patients
-                int totalPatientsCount = await _patientRepository.GetPatientsCount();
+                int totalPatientsCount = await _patientService.GetPatientsCount();
 
                 int maxPages = (int)Math.Ceiling((double)totalPatientsCount / size);
 
@@ -72,6 +69,28 @@ namespace Web.Controllers
                         currentPage = page,
                         itemsPerPage = size,
                         patients = patientsResponse
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("count")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetPatientsCount()
+        {
+            try
+            {
+                int numberOfPatients = await _patientService.GetPatientsCount();
+                return Ok(
+                    new
+                    {
+                        numberOfPatients,
+                        succes = true,
+                        statusCode = 200
                     }
                 );
             }
