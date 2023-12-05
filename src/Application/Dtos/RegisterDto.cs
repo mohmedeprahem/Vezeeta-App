@@ -18,7 +18,6 @@ namespace Application.Dtos
         [StringLength(50, MinimumLength = 3)]
         public string LastName { get; set; }
 
-        [StringLength(50, MinimumLength = 3)]
         [EmailAddress]
         public string Email { get; set; }
 
