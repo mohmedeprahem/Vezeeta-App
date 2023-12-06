@@ -29,7 +29,7 @@ namespace Application.Dtos
         public string ConfirmPassword { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         [EnumNameValidation(typeof(GendersEnum))]
         public string Gender { get; set; }
