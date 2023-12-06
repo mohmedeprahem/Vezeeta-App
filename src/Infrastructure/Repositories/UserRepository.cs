@@ -52,10 +52,7 @@ namespace Infrastructure.Repositories
         public async Task<int> GetUsersCountByRole(string role, string lastDate = "")
         {
             int count = 0;
-            string? roleId = _appDbContext
-                .Roles
-                .FirstOrDefault(r => r.Name == RolesEnum.Patient.ToString())
-                ?.Id;
+            string? roleId = _appDbContext.Roles.FirstOrDefault(r => r.Name == role)?.Id;
 
             // Get last date or current date
             if (!lastDate.IsNullOrEmpty())
