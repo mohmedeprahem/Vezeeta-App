@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Models;
 
-namespace Core.Authentications
+namespace Application.Dtos.Authentications
 {
     public class AuthenticationResult
     {
