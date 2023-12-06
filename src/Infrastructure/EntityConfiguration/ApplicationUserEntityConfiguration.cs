@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Application.Services;
 using Core.enums;
 using Core.Models;
@@ -40,6 +41,8 @@ namespace Infrastructure.EntityConfiguration
                 .Property(u => u.FullName)
                 .HasComputedColumnSql("[FirstName] + ' ' + [LastName]")
                 .ValueGeneratedOnAddOrUpdate();
+
+            builder.Property(e => e.CreatedAt).HasDefaultValueSql("getutcdate()");
         }
     }
 }
