@@ -38,5 +38,10 @@ namespace Infrastructure.Services
                 lastDate
             );
         }
+
+        public async Task<ApplicationUser> GetPatientById(string id)
+        {
+            return await _patientRepository.GetUserById(id);
+        }
     }
 }
