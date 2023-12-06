@@ -83,6 +83,15 @@ namespace Infrastructure.DataBase.Etension
                 }
             }
 
+            // Seed Specialization
+            foreach (var specialization in Enum.GetNames(typeof(SpecializationsEnum)).ToList())
+            {
+                if (!context.Specializations.Any(s => s.Title == specialization))
+                {
+                    context.Specializations.Add(new Specialization { Title = specialization });
+                }
+            }
+
             await context.SaveChangesAsync();
         }
     }
