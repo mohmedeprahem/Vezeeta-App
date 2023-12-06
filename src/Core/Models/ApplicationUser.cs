@@ -23,6 +23,9 @@ namespace Core.Models
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
+
         [Required]
         public override string Email { get; set; }
         public string? Image { get; set; }
