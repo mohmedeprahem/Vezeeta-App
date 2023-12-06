@@ -46,6 +46,8 @@ namespace Infrastructure.DataBase.Etension
                     UserName = "admin",
                     Email = "admin@localhost.com",
                     EmailConfirmed = true,
+                    PhoneNumber = "+201234567891",
+                    PhoneNumberConfirmed = true
                 };
 
                 IdentityResult createResult = await userManager.CreateAsync(
