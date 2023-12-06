@@ -1,14 +1,14 @@
 ﻿using Application.Dtos;
+using Application.Dtos.Authentications;
 using Application.Interfaces.Services;
 using Application.Services;
 using Azure;
-using Core.Authentications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -22,8 +22,8 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        [Route("register-patient")]
+        public async Task<IActionResult> RegisterPatient(RegisterDto registerDto)
         {
             // Validate image
             if (registerDto.Image != null)
@@ -54,7 +54,7 @@ namespace Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await _authService.Register(registerDto);
+            IdentityResult result = await _authService.RegisterPatient(registerDto);
 
             if (result.Succeeded)
             {
@@ -66,6 +66,61 @@ namespace Web.Controllers
             else
             {
                 return BadRequest(result);
+            }
+        }
+
+        [HttpPost]
+        [Route("register-doctor")]
+        public async Task<IActionResult> RegisterDoctor([FromForm] DoctorDto doctorDto)
+        {
+            try
+            {
+                // Validate image
+                if (doctorDto.Image != null)
+                {
+                    long fileSize = doctorDto.Image.Length;
+
+                    if (
+                        doctorDto.Image.ContentType != "image/jpeg"
+                        && doctorDto.Image.ContentType != "image/png"
+                    )
+                    {
+                        ModelState.AddModelError(
+                            "Image",
+                            "Invalid image format. Only JPEG and PNG are allowed."
+                        );
+                    }
+                    else if (fileSize > 5 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError(
+                            "Image",
+                            "Invalid image size. The maximum allowed size is 5 MB."
+                        );
+                    }
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                IdentityResult result = await _authService.RegisterDoctor(doctorDto);
+
+                if (result.Succeeded)
+                {
+                    return Created(
+                        "User registered successfully",
+                        new { success = true, statusCode = 201 }
+                    );
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
