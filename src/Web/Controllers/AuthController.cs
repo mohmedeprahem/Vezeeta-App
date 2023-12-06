@@ -3,6 +3,7 @@ using Application.Dtos.Authentications;
 using Application.Interfaces.Services;
 using Application.Services;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -77,6 +78,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("register-doctor")]
+        [Authorize(policy: "AdminOnly")]
         public async Task<IActionResult> RegisterDoctor([FromForm] DoctorDto doctorDto)
         {
             try
