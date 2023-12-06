@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Dtos.Authentications;
+using Application.Interfaces.Repositories;
 using Application.Repositories;
-using Core.Authentications;
 using Core.enums;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,11 @@ namespace Infrastructure.Repositories
             this._roleManager = roleManager;
         }
 
-        public async Task<IdentityResult> Register(ApplicationUser user, string password)
+        public async Task<IdentityResult> Register(
+            ApplicationUser user,
+            string password,
+            string role
+        )
         {
             try
             {
@@ -33,10 +38,7 @@ namespace Infrastructure.Repositories
                 IdentityResult resultStatus = await _userManager.CreateAsync(user, password);
                 if (resultStatus.Succeeded)
                 {
-                    IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(
-                        user,
-                        RolesEnum.Patient.ToString()
-                    );
+                    IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(user, role);
                 }
 
                 return resultStatus;
