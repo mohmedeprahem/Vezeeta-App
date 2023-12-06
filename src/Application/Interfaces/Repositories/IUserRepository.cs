@@ -16,5 +16,6 @@ namespace Application.Interfaces.Repositories
             string search
         );
         public Task<int> GetUsersCountByRole(string role, string lastDate);
+        public Task<ApplicationUser> GetUserById(string id);
     }
 }

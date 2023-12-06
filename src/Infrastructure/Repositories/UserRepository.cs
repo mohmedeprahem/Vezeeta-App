@@ -93,5 +93,10 @@ namespace Infrastructure.Repositories
 
             return count;
         }
+
+        public async Task<ApplicationUser> GetUserById(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
     }
 }
