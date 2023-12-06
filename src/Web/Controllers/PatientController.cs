@@ -19,10 +19,11 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(policy: "AdminOnly")]
-        public async Task<IActionResult> GetPatients(
+        /*        [Authorize(policy: "AdminOnly")]
+        */public async Task<IActionResult> GetPatients(
             [FromQuery] int page = 1,
-            [FromQuery] int size = 1
+            [FromQuery] int size = 1,
+            [FromQuery] string search = ""
         )
         {
             try
@@ -33,7 +34,11 @@ namespace Web.Controllers
                 }
 
                 // Get patients
-                List<ApplicationUser> patientsInfo = await _patientService.GetPatients(page, size);
+                List<ApplicationUser> patientsInfo = await _patientService.GetPatients(
+                    page,
+                    size,
+                    search
+                );
 
                 if (patientsInfo == null)
                 {
@@ -47,7 +52,7 @@ namespace Web.Controllers
                             new
                             {
                                 image = patient.Image,
-                                fullName = $"{patient.FirstName} {patient.LastName}",
+                                fullName = patient.FullName,
                                 email = patient.Email,
                                 gender = patient.Gender.ToString(),
                                 dateOfBirth = patient.DateOfBirth.ToString("dd/MM/yyyy"),
@@ -74,7 +79,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, ex);
             }
         }
 

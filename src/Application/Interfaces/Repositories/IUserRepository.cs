@@ -9,7 +9,12 @@ namespace Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task<List<ApplicationUser>> GetUsersByRole(string role, int page = 1, int size = 8);
+        public Task<List<ApplicationUser>> GetUsersByRole(
+            string role,
+            int page,
+            int size,
+            string search
+        );
         public Task<int> GetUsersCountByRole(string role);
     }
 }

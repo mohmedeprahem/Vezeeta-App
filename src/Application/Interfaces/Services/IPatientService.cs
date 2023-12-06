@@ -9,7 +9,7 @@ namespace Application.Interfaces.Services
 {
     public interface IPatientService
     {
-        public Task<List<ApplicationUser>> GetPatients(int page, int size);
+        public Task<List<ApplicationUser>> GetPatients(int page, int size, string search);
         public Task<int> GetPatientsCount();
     }
 }

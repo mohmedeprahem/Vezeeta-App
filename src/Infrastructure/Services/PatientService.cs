@@ -21,12 +21,13 @@ namespace Infrastructure.Services
             this._patientRepository = patientRepository;
         }
 
-        public async Task<List<ApplicationUser>> GetPatients(int page, int size)
+        public async Task<List<ApplicationUser>> GetPatients(int page, int size, string search)
         {
             return await _patientRepository.GetUsersByRole(
                 RolesEnum.Patient.ToString(),
                 page,
-                size
+                size,
+                search
             );
         }
 

@@ -29,11 +29,18 @@ namespace Infrastructure.Repositories
         public async Task<List<ApplicationUser>> GetUsersByRole(
             string role,
             int page = 1,
-            int size = 8
+            int size = 8,
+            string search = ""
         )
         {
             IList<ApplicationUser> usersInRole = await _userManager.GetUsersInRoleAsync(role);
             List<ApplicationUser> pagedUsers = usersInRole
+                .Where(
+                    user =>
+                        user.FullName.Contains(search)
+                        || user.Email.Contains(search)
+                        || user.PhoneNumber.Contains(search)
+                )
                 .Skip((page - 1) * size)
                 .Take(size)
                 .ToList();
