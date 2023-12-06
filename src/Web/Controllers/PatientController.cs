@@ -19,8 +19,8 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        /*        [Authorize(policy: "AdminOnly")]
-        */public async Task<IActionResult> GetPatients(
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetPatients(
             [FromQuery] int page = 1,
             [FromQuery] int size = 1,
             [FromQuery] string search = ""
@@ -85,11 +85,11 @@ namespace Web.Controllers
 
         [HttpGet("count")]
         [Authorize(policy: "AdminOnly")]
-        public async Task<IActionResult> GetPatientsCount()
+        public async Task<IActionResult> GetPatientsCount([FromQuery] string lastDate = "")
         {
             try
             {
-                int numberOfPatients = await _patientService.GetPatientsCount();
+                int numberOfPatients = await _patientService.GetPatientsCount(lastDate);
                 return Ok(
                     new
                     {

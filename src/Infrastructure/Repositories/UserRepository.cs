@@ -11,6 +11,7 @@ using Core.Models;
 using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Repositories
 {
@@ -48,19 +49,49 @@ namespace Infrastructure.Repositories
         }
 
         // Get Counts of all patients
-        public async Task<int> GetUsersCountByRole(string role)
+        public async Task<int> GetUsersCountByRole(string role, string lastDate = "")
         {
+            int count = 0;
             string? roleId = _appDbContext
                 .Roles
                 .FirstOrDefault(r => r.Name == RolesEnum.Patient.ToString())
                 ?.Id;
 
-            if (roleId == null)
+            // Get last date or current date
+            if (!lastDate.IsNullOrEmpty())
             {
-                return 0;
+                DateTime lastWeekStartDate = lastDate switch
+                {
+                    "day" => DateTime.UtcNow.AddDays(-1),
+                    "week" => DateTime.UtcNow.AddDays(-7),
+                    "month" => DateTime.UtcNow.AddDays(-30),
+                    "year" => DateTime.UtcNow.AddDays(-365),
+                    _ => DateTime.UtcNow.AddDays(-7)
+                };
+                count = await _appDbContext
+                    .Users
+                    .Join(
+                        _appDbContext.UserRoles,
+                        user => user.Id,
+                        userRole => userRole.UserId,
+                        (user, userRole) => new { User = user, UserRole = userRole }
+                    )
+                    .Where(
+                        joinResult =>
+                            joinResult.UserRole.RoleId == roleId
+                            && joinResult.User.CreatedAt >= lastWeekStartDate
+                    )
+                    .Select(joinResult => joinResult.User.Id)
+                    .CountAsync();
+            }
+            else
+            {
+                count = await _appDbContext
+                    .UserRoles
+                    .CountAsync(userRole => userRole.RoleId == roleId);
             }
 
-            return await _appDbContext.UserRoles.CountAsync(ur => ur.RoleId == roleId);
+            return count;
         }
     }
 }

@@ -25,15 +25,18 @@ namespace Infrastructure.Services
         {
             return await _patientRepository.GetUsersByRole(
                 RolesEnum.Patient.ToString(),
-                page,
-                size,
-                search
+                page = 1,
+                size = 8,
+                search = ""
             );
         }
 
-        public async Task<int> GetPatientsCount()
+        public async Task<int> GetPatientsCount(string lastDate = "")
         {
-            return await _patientRepository.GetUsersCountByRole(RolesEnum.Patient.ToString());
+            return await _patientRepository.GetUsersCountByRole(
+                RolesEnum.Patient.ToString(),
+                lastDate
+            );
         }
     }
 }
