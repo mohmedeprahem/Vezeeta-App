@@ -79,7 +79,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -96,6 +96,42 @@ namespace Web.Controllers
                         numberOfPatients,
                         succes = true,
                         statusCode = 200
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetPatientById([FromRoute] string id)
+        {
+            try
+            {
+                ApplicationUser patientsInfo = await _patientService.GetPatientById(id);
+
+                if (patientsInfo == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        patient = new
+                        {
+                            image = patientsInfo.Image,
+                            fullName = patientsInfo.FullName,
+                            email = patientsInfo.Email,
+                            gender = patientsInfo.Gender.ToString(),
+                            dateOfBirth = patientsInfo.DateOfBirth.ToString("dd/MM/yyyy")
+                        },
+                        requests = Array.Empty<Booking>()
                     }
                 );
             }
