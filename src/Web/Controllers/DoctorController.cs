@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Services;
 using Core.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,8 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPatients(
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetDoctors(
             [FromQuery] int page = 1,
             [FromQuery] int size = 1,
             [FromQuery] string search = ""
@@ -74,6 +76,28 @@ namespace Web.Controllers
                         currentPage = page,
                         itemsPerPage = size,
                         doctors = doctorsResponse
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("count")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetDoctorsCount([FromQuery] string lastDate = "")
+        {
+            try
+            {
+                int numberOfDoctors = await _doctorService.GetDoctorsCount(lastDate);
+                return Ok(
+                    new
+                    {
+                        numberOfDoctors,
+                        succes = true,
+                        statusCode = 200
                     }
                 );
             }
