@@ -87,6 +87,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<ISpecializationRepository, SpecializationRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));

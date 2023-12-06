@@ -14,11 +14,17 @@ namespace Web.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IEmailService _emailService;
 
-        public AuthController(IAuthService authService, IJwtTokenService jwtTokenService)
+        public AuthController(
+            IAuthService authService,
+            IJwtTokenService jwtTokenService,
+            IEmailService emailService
+        )
         {
             this._authService = authService;
             this._jwtTokenService = jwtTokenService;
+            this._emailService = emailService;
         }
 
         [HttpPost]
@@ -108,6 +114,12 @@ namespace Web.Controllers
 
                 if (result.Succeeded)
                 {
+                    // send email
+                    _emailService.SendEmail(
+                        doctorDto.Email,
+                        "Registration Successful",
+                        $"Your account \n email: {doctorDto.Email} password: {doctorDto.Password}"
+                    );
                     return Created(
                         "User registered successfully",
                         new { success = true, statusCode = 201 }
