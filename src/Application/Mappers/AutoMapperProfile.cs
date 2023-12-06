@@ -13,8 +13,8 @@ namespace Application.Mappers
     {
         public AutoMappingProfile()
         {
-            CreateMap<RegisterDto, ApplicationUser>();
-            CreateMap<ApplicationUser, RegisterDto>();
+            CreateMap<PatientDto, ApplicationUser>();
+            CreateMap<ApplicationUser, PatientDto>();
             CreateMap<DoctorDto, ApplicationUser>();
         }
     }

@@ -39,7 +39,7 @@ namespace Infrastructure.Services
             this._specializationRepository = specializationRepository;
         }
 
-        public async Task<IdentityResult> RegisterPatient(RegisterDto model)
+        public async Task<IdentityResult> RegisterPatient(PatientDto model)
         {
             string imageName = string.Empty;
             string savePath = string.Empty;

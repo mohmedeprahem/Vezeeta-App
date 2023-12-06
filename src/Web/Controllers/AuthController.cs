@@ -23,7 +23,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("register-patient")]
-        public async Task<IActionResult> RegisterPatient(RegisterDto registerDto)
+        public async Task<IActionResult> RegisterPatient(PatientDto registerDto)
         {
             // Validate image
             if (registerDto.Image != null)

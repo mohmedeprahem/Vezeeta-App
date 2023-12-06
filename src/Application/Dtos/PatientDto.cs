@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Dtos
 {
-    public class RegisterDto
+    public class PatientDto
     {
         [StringLength(50, MinimumLength = 3)]
         public string FirstName { get; set; }

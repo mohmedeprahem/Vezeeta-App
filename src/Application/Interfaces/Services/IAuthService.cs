@@ -12,7 +12,7 @@ namespace Application.Services
 {
     public interface IAuthService
     {
-        public Task<IdentityResult> RegisterPatient(RegisterDto model);
+        public Task<IdentityResult> RegisterPatient(PatientDto model);
         public Task<AuthenticationResult> Login(LoginDto model);
         public Task<IdentityResult> RegisterDoctor(DoctorDto model);
     }
