@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces.Repositories;
+using Core.enums;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Repositories
 {
@@ -57,6 +60,44 @@ namespace Infrastructure.Repositories
                 }
             }
             return await query.FirstOrDefaultAsync(user => user.Id == id);
+        }
+
+        public async Task<IdentityResult> UpdateDoctor(ApplicationUser doctor)
+        {
+            try
+            {
+                // Step 1: Retrieve the entity using LINQ
+                ApplicationUser? entityToUpdate = _appDbContext
+                    .Users
+                    .FirstOrDefault(entity => entity.Id == doctor.Id);
+                if (entityToUpdate != null)
+                {
+                    bool IsUserDoctor = await _userManager.IsInRoleAsync(
+                        entityToUpdate,
+                        RolesEnum.Doctor.ToString()
+                    );
+                    if (IsUserDoctor)
+                    {
+                        entityToUpdate.FirstName = doctor.FirstName;
+                        entityToUpdate.LastName = doctor.LastName;
+                        entityToUpdate.Email = doctor.Email;
+                        entityToUpdate.PhoneNumber = doctor.PhoneNumber;
+                        entityToUpdate.SpecializationId = doctor.SpecializationId;
+                        entityToUpdate.Gender = doctor.Gender;
+                        entityToUpdate.DateOfBirth = doctor.DateOfBirth;
+                        if (doctor.Image != null)
+                            entityToUpdate.Image = doctor.Image;
+
+                        _appDbContext.SaveChanges();
+                        return IdentityResult.Success;
+                    }
+                }
+                return IdentityResult.Failed();
+            }
+            catch (DbUpdateException ex)
+            {
+                return IdentityResult.Failed();
+            }
         }
     }
 }
