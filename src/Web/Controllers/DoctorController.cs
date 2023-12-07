@@ -106,5 +106,42 @@ namespace Web.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpGet("{Id}")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetDoctorById([FromRoute] string Id)
+        {
+            try
+            {
+                ApplicationUser doctorInfo = await _doctorService.GetDoctorById(Id);
+
+                if (doctorInfo == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        patient = new
+                        {
+                            image = doctorInfo.Image,
+                            fullName = doctorInfo.FullName,
+                            email = doctorInfo.Email,
+                            gender = doctorInfo.Gender.ToString(),
+                            phoneNumber = doctorInfo.PhoneNumber,
+                            dateOfBirth = doctorInfo.DateOfBirth.ToString("dd/MM/yyyy"),
+                            specialize = doctorInfo.Specialization != null
+                        },
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
