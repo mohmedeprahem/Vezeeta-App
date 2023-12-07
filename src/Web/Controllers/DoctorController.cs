@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using System.Numerics;
+using Application.Dtos;
 using Application.Interfaces.Services;
 using Core.Models;
 using Infrastructure.Services;
@@ -138,6 +139,8 @@ namespace Web.Controllers
                             phoneNumber = doctorInfo.PhoneNumber,
                             dateOfBirth = doctorInfo.DateOfBirth.ToString("dd/MM/yyyy"),
                             specialize = doctorInfo.Specialization != null
+                                ? doctorInfo.Specialization.Title
+                                : null
                         },
                     }
                 );
