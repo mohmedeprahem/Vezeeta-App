@@ -45,5 +45,18 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
             return pagedUsers;
         }
+
+        public async Task<ApplicationUser> GetDoctorById(string id, string[] includes = null)
+        {
+            IQueryable<ApplicationUser> query = _appDbContext.Set<ApplicationUser>();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(user => user.Id == id);
+        }
     }
 }

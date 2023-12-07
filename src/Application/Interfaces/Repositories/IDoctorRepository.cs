@@ -15,5 +15,7 @@ namespace Application.Interfaces.Repositories
             string search = "",
             string[] includes = null
         );
+
+        public Task<ApplicationUser> GetDoctorById(string id, string[] includes = null);
     }
 }
