@@ -11,5 +11,6 @@ namespace Application.Interfaces.Services
     {
         public Task<List<ApplicationUser>> GetDoctors(int page, int size, string search);
         public Task<int> GetDoctorsCount(string lastDate = "");
+        public Task<ApplicationUser> GetDoctorById(string id);
     }
 }

@@ -38,5 +38,10 @@ namespace Infrastructure.Services
                 lastDate
             );
         }
+
+        public async Task<ApplicationUser> GetDoctorById(string id)
+        {
+            return await _doctorRepository.GetDoctorById(id, new string[] { "Specialization" });
+        }
     }
 }
