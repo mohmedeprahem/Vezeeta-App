@@ -37,7 +37,7 @@ namespace Application.Dtos
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
-        public string Specialize { get; set; }
+        public int SpecializationId { get; set; }
         public IFormFile Image { get; set; }
     }
 }

@@ -83,23 +83,6 @@ namespace Infrastructure.Services
                 imageName = await _fileService.UploadFile(model.Image, savePath);
                 user.Image = imageName;
 
-                // Check if specialty exists
-                Specialization specialization =
-                    await _specializationRepository.GetSpecializationByTitle(model.Specialize);
-
-                if (specialization == null)
-                {
-                    return IdentityResult.Failed(
-                        new IdentityError
-                        {
-                            Code = "Specialization",
-                            Description = "The specified specialization was not found.",
-                        }
-                    );
-                }
-
-                user.SpecializationId = specialization.Id;
-
                 // Save user
                 IdentityResult result = await _authRepository.Register(
                     user,
