@@ -50,10 +50,12 @@ namespace Web.Controllers
                         doctor =>
                             new
                             {
+                                id = doctor.Id,
                                 image = doctor.Image,
                                 fullName = doctor.FullName,
                                 email = doctor.Email,
                                 gender = doctor.Gender.ToString(),
+                                phoneNumber = doctor.PhoneNumber,
                                 dateOfBirth = doctor.DateOfBirth.ToString("dd/MM/yyyy"),
                                 specialize = doctor.Specialization != null
                                     ? doctor.Specialization.Title
@@ -125,7 +127,7 @@ namespace Web.Controllers
                     {
                         succes = true,
                         statusCode = 200,
-                        patient = new
+                        Doctor = new
                         {
                             image = doctorInfo.Image,
                             fullName = doctorInfo.FullName,
