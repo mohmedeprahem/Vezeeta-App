@@ -51,9 +51,11 @@ namespace Web.Controllers
                         patient =>
                             new
                             {
+                                id = patient.Id,
                                 image = patient.Image,
                                 fullName = patient.FullName,
                                 email = patient.Email,
+                                phoneNumber = patient.PhoneNumber,
                                 gender = patient.Gender.ToString(),
                                 dateOfBirth = patient.DateOfBirth.ToString("dd/MM/yyyy"),
                             }
@@ -128,6 +130,7 @@ namespace Web.Controllers
                             image = patientsInfo.Image,
                             fullName = patientsInfo.FullName,
                             email = patientsInfo.Email,
+                            phoneNumber = patientsInfo.PhoneNumber,
                             gender = patientsInfo.Gender.ToString(),
                             dateOfBirth = patientsInfo.DateOfBirth.ToString("dd/MM/yyyy")
                         },
