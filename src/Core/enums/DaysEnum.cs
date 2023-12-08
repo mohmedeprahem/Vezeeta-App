@@ -8,7 +8,7 @@ namespace Core.enums
 {
     public enum DaysEnum
     {
-        Saturday,
+        Saturday = 1,
         Sunday,
         Monday,
         Tuesday,
