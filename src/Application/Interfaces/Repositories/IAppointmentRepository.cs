@@ -11,7 +11,10 @@ namespace Application.Interfaces.Repositories
     {
         public Task<Appointment> CreateAppointmentDayAsync(Appointment appointment);
         public Task<Appointment> GetAppointmentByDayIdAsync(int dayId, string doctorId);
-        public Task<AppointmentTime> CreateAppointmentTimeAsync(int appointmentDayId, string time);
+        public Task<AppointmentTime> CreateAppointmentTimeAsync(
+            int appointmentDayId,
+            TimeOnly time
+        );
         public Task<bool> IsDayAddedBefore(int dayId, string doctorId);
     }
 }

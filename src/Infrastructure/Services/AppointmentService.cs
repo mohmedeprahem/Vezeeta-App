@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,14 +78,29 @@ namespace Infrastructure.Services
                                 .CreateAppointmentDayAsync(
                                     new Appointment { DayId = (int)day, DoctorId = doctorId }
                                 );
+                            await _unitOfWork.SaveChangesAsync();
 
-                            /*// Create appointment times
+                            // Check if there duplication in appointment times
+                            bool hasDuplicates =
+                                appointmentDayDto.Times.Count()
+                                != appointmentDayDto.Times.Distinct().Count();
+                            if (hasDuplicates)
+                            {
+                                throw new Exception("Invalid time");
+                            }
+                            // Create appointment times
                             foreach (string time in appointmentDayDto.Times)
                             {
+                                // Check if time valid
+                                TimeOnly parsedTime = TimeOnly.ParseExact(
+                                    time,
+                                    "h:mm tt",
+                                    CultureInfo.InvariantCulture
+                                );
                                 await _unitOfWork
                                     .AppointmentRepository
-                                    .CreateAppointmentTimeAsync(appointmentDay.Id, time);
-                            }*/
+                                    .CreateAppointmentTimeAsync(appointmentDay.Id, parsedTime);
+                            }
                         }
                         else
                         {
@@ -99,7 +115,11 @@ namespace Infrastructure.Services
                 {
                     await _unitOfWork.RollbackAsync();
                     return IdentityResult.Failed(
-                        new IdentityError { Code = "TransactionFailed", Description = ex.Message }
+                        new IdentityError
+                        {
+                            Code = "Create New appointment failed",
+                            Description = ex.Message
+                        }
                     );
                 }
             }

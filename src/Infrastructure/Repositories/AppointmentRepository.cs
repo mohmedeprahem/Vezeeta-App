@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Core.enums;
 using Core.Models;
@@ -29,32 +30,45 @@ namespace Infrastructure.Repositories
             DaysEnum dayEnum = (DaysEnum)appointment.DayId;
 
             appointment.Date = _helperFunctions.GetNextWeekday(dayEnum.ToString());
-            _appDbContext.Appointments.Add(appointment);
+            await _appDbContext.Appointments.AddAsync(appointment);
             return appointment;
         }
 
-        public Task<AppointmentTime> CreateAppointmentTimeAsync(int appointmentDayId, string time)
+        public async Task<AppointmentTime> CreateAppointmentTimeAsync(
+            int appointmentId,
+            TimeOnly time
+        )
         {
-            throw new NotImplementedException();
-        }
+            // Get time id
+            Time? timeResult = await _appDbContext
+                .Times
+                .FirstOrDefaultAsync(t => t.TimeValue == time);
 
-        /*        public async Task<AppointmentTime> CreateAppointmentTimeAsync(
-                    string appointmentId,
-                    string time
-                )
-                {
-                    // Get time id
-                    await _appDbContext.Times.FirstOrDefault(t => t.TimeValue == time);
-                    await _appDbContext
-                        .AppointmentTimes
-                        .AddAsync(new AppointmentTime { AppointmentId = appointmentId, Time = time });
-                }*/
+            if (timeResult == null)
+            {
+                timeResult = new Time { TimeValue = time };
+                await _appDbContext.Times.AddAsync(timeResult);
+                await _appDbContext.SaveChangesAsync();
+            }
+            AppointmentTime newAppointmentDay = new AppointmentTime
+            {
+                AppointmentId = appointmentId,
+                TimeId = timeResult.Id
+            };
+            await _appDbContext.AppointmentTimes.AddAsync(newAppointmentDay);
+            return newAppointmentDay;
+        }
 
         public async Task<Appointment> GetAppointmentByDayIdAsync(int dayId, string doctorId)
         {
-            return await _appDbContext
+            Appointment? result = await _appDbContext
                 .Appointments
                 .FirstOrDefaultAsync(a => a.DayId == dayId && a.DoctorId == doctorId);
+            if (result == null)
+            {
+                return null;
+            }
+            return result;
         }
 
         public async Task<bool> IsDayAddedBefore(int dayId, string doctorId)
@@ -64,7 +78,7 @@ namespace Infrastructure.Repositories
 
             DateTime nextWeekday = _helperFunctions.GetNextWeekday(dayEnum.ToString());
 
-                return await _appDbContext
+            return await _appDbContext
                 .Appointments
                 .AnyAsync(a => a.DayId == dayId && a.DoctorId == doctorId && a.Date == nextWeekday);
         }

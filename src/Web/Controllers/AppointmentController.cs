@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -38,11 +39,16 @@ namespace Web.Controllers
                     return Unauthorized();
                 }
 
-                await _appointmentService.CreateAppointmentAsync(
+                IdentityResult appointmentResult = await _appointmentService.CreateAppointmentAsync(
                     createAppointmentDto.Appointments,
                     userId,
                     createAppointmentDto.Price
                 );
+
+                if (!appointmentResult.Succeeded)
+                {
+                    return BadRequest(appointmentResult);
+                }
                 return Created();
             }
             catch (Exception ex)
