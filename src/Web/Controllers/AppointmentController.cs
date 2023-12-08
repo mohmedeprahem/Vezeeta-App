@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(policy: "DoctorOnly")]
         public async Task<IActionResult> CreateAppointmentDayAsync(
             [FromForm] CreateAppointmentDto createAppointmentDto
         )
