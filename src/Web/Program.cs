@@ -79,6 +79,7 @@ builder
     .AddAuthorization(options =>
     {
         options.AddPolicy("AdminOnly", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
+        options.AddPolicy("DoctorOnly", p => p.RequireClaim(ClaimTypes.Role, "Doctor"));
     });
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
