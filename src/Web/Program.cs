@@ -9,6 +9,7 @@ using Core.Models;
 using Infrastructure.DataBase.Context;
 using Infrastructure.DataBase.Etension;
 using Infrastructure.Helpers;
+using Infrastructure.Helpers.GeneralFunctions;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -90,6 +91,10 @@ builder.Services.AddScoped<ISpecializationRepository, SpecializationRepository>(
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<HelperFunctions>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
