@@ -32,7 +32,7 @@ namespace Core.Models
         public string? Image { get; set; }
         public int? SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
-        public ExaminationPrice Price { get; set; }
+        public ExaminationPrice ExaminationPrice { get; set; }
         public UserBookingTracking AprovedBookingCount { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<Booking> PatientBookings { get; set; }

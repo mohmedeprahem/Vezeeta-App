@@ -15,7 +15,10 @@ namespace Infrastructure.EntityConfiguration
         {
             builder.HasKey(ep => ep.DoctorId);
 
-            builder.HasOne(ep => ep.Doctor).WithOne(d => d.Price).OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasOne(ep => ep.Doctor)
+                .WithOne(d => d.ExaminationPrice)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
