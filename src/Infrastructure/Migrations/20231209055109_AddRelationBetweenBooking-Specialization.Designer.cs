@@ -4,6 +4,7 @@ using Infrastructure.DataBase.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231209055109_AddRelationBetweenBooking-Specialization")]
+    partial class AddRelationBetweenBookingSpecialization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,7 +159,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Core.Models.AppointmentTime", b =>
@@ -182,7 +185,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TimeId");
 
-                    b.ToTable("AppointmentTimes", (string)null);
+                    b.ToTable("AppointmentTimes");
                 });
 
             modelBuilder.Entity("Core.Models.Booking", b =>
@@ -236,7 +239,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SpecializationId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("Core.Models.BookingStatus", b =>
@@ -254,7 +257,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BookingStatuses", null, t =>
+                    b.ToTable("BookingStatuses", t =>
                         {
                             t.HasCheckConstraint("CK_BookingStatuses_Name", "Name IN ('Binding', 'Completed', 'Cancelled')");
                         });
@@ -275,7 +278,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Days", null, t =>
+                    b.ToTable("Days", t =>
                         {
                             t.HasCheckConstraint("CK_Days_Name", "Name IN ('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')");
                         });
@@ -306,7 +309,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("DiscountTypeId");
 
-                    b.ToTable("Discounts", (string)null);
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("Core.Models.DiscountType", b =>
@@ -324,7 +327,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiscountTypes", null, t =>
+                    b.ToTable("DiscountTypes", t =>
                         {
                             t.HasCheckConstraint("CK_DiscountTypes_Name", "Name IN ('Percentage', 'Value')");
                         });
@@ -340,7 +343,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("DoctorId");
 
-                    b.ToTable("ExaminationPrices", (string)null);
+                    b.ToTable("ExaminationPrices");
                 });
 
             modelBuilder.Entity("Core.Models.Specialization", b =>
@@ -358,7 +361,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations", (string)null);
+                    b.ToTable("Specializations");
                 });
 
             modelBuilder.Entity("Core.Models.Time", b =>
@@ -374,7 +377,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Times", (string)null);
+                    b.ToTable("Times");
                 });
 
             modelBuilder.Entity("Core.Models.UserBookingTracking", b =>
@@ -387,7 +390,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("PatientId");
 
-                    b.ToTable("UserBookingTracking", (string)null);
+                    b.ToTable("UserBookingTracking");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

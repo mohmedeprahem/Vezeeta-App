@@ -14,5 +14,6 @@ namespace Core.Models
         [StringLength(50, MinimumLength = 3)]
         public string Title { get; set; }
         public ICollection<ApplicationUser> Doctors { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }
