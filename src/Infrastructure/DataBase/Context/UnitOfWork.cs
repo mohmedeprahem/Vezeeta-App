@@ -15,6 +15,7 @@ namespace Infrastructure.DataBase.Context
         private readonly AppDbContext _dbContext;
 
         public IAppointmentRepository AppointmentRepository { get; private set; }
+        public IDiscountRepository DiscountRepository { get; private set; }
 
         private IDbContextTransaction _transaction;
 
@@ -22,7 +23,7 @@ namespace Infrastructure.DataBase.Context
         {
             _dbContext = dbContext;
             AppointmentRepository = new AppointmentRepository(_dbContext, new HelperFunctions());
-            // Initialize other repositories
+            DiscountRepository = new DiscountRepository(_dbContext);
 
             _transaction = null;
         }
