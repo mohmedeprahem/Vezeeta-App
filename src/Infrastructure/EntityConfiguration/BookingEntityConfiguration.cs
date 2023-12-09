@@ -18,10 +18,6 @@ namespace Infrastructure.EntityConfiguration
                 .WithMany(u => u.PatientBookings)
                 .HasForeignKey(b => b.PatientId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder
-                .Property(b => b.CreatedAt)
-                .HasComputedColumnSql("getutcdate()")
-                .ValueGeneratedOnAdd();
         }
     }
 }
