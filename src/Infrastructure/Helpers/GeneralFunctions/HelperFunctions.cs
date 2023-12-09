@@ -24,5 +24,17 @@ namespace Infrastructure.Helpers.GeneralFunctions
 
             return DateOnly.FromDateTime(nextWeekday);
         }
+
+        public int CalculatePercentageDiscount(int originalValue, int discountValue)
+        {
+            // Ensure the discount percentage is within a valid range (0 to 100)
+            int discountPercentage = Math.Max(0, Math.Min(100, discountValue));
+
+            // Calculate
+            decimal discountAmount = ((decimal)discountPercentage / 100) * originalValue;
+            decimal finalPrice = originalValue - discountAmount;
+
+            return (int)finalPrice;
+        }
     }
 }
