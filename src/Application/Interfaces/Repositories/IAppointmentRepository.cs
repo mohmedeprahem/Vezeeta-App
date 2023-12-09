@@ -24,5 +24,6 @@ namespace Application.Interfaces.Repositories
             int appointmentTimeId,
             TimeOnly time
         );
+        public Task<IdentityResult> DeleteAppointmentTimeAsync(int id);
     }
 }

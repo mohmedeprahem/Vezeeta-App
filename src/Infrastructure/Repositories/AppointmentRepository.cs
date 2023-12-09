@@ -172,5 +172,25 @@ namespace Infrastructure.Repositories
 
             return timeEntity;
         }
+
+        public async Task<IdentityResult> DeleteAppointmentTimeAsync(int id)
+        {
+            var appointmentTime = await _appDbContext.AppointmentTimes.FindAsync(id);
+
+            if (appointmentTime == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "NotFound",
+                        Description = "AppointmentTime not found."
+                    }
+                );
+            }
+
+            _appDbContext.AppointmentTimes.Remove(appointmentTime);
+
+            return IdentityResult.Success;
+        }
     }
 }
