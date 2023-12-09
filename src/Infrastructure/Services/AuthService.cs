@@ -25,18 +25,21 @@ namespace Infrastructure.Services
         private readonly IAuthRepository _authRepository;
         private readonly IFileService _fileService;
         private readonly ISpecializationRepository _specializationRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(
             IMapper mapper,
             IAuthRepository authRepository,
             IFileService fileService,
-            ISpecializationRepository specializationRepository
+            ISpecializationRepository specializationRepository,
+            IUnitOfWork unitOfWork
         )
         {
             this._mapper = mapper;
             this._authRepository = authRepository;
             this._fileService = fileService;
             this._specializationRepository = specializationRepository;
+            this._unitOfWork = unitOfWork;
         }
 
         public async Task<IdentityResult> RegisterPatient(PatientDto model)
@@ -99,6 +102,19 @@ namespace Infrastructure.Services
                     }
                 }
 
+                if (result.Succeeded)
+                {
+                    // Save default price
+                    ExaminationPrice examinationPrice = new ExaminationPrice
+                    {
+                        DoctorId = user.Id,
+                        price = 0
+                    };
+                    await _unitOfWork
+                        .ExaminationPriceRepository
+                        .CreateExaminationPrices(examinationPrice);
+                }
+                await _unitOfWork.SaveChangesAsync();
                 return result;
             }
             catch (Exception ex)
