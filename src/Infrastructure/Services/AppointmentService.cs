@@ -132,5 +132,49 @@ namespace Infrastructure.Services
                 }
             }
         }
+
+        public async Task<IdentityResult> UpdateAppointmentTimeAsync(
+            string doctorId,
+            UpdateAppointmentTimeDto updateAppointmentTimeDto,
+            int AppointmentTimeId
+        )
+        {
+            AppointmentTime appointmentTime = await _unitOfWork
+                .AppointmentRepository
+                .GetAppointmentTimeById(AppointmentTimeId, ["Appointment"]);
+
+            if (appointmentTime == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "NotFound",
+                        Description = "Appointment time not found"
+                    }
+                );
+            }
+
+            if (appointmentTime.Appointment.DoctorId != doctorId || appointmentTime.IsBooked)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
+                );
+            }
+
+            // Check if time valid
+            TimeOnly parsedTime = TimeOnly.ParseExact(
+                updateAppointmentTimeDto.Time,
+                "h:mm tt",
+                CultureInfo.InvariantCulture
+            );
+
+            // Update appointment time
+            IdentityResult identityResult = await _unitOfWork
+                .AppointmentRepository
+                .UpdateAppointmentTimeAsync(AppointmentTimeId, parsedTime);
+
+            await _unitOfWork.SaveChangesAsync();
+            return identityResult;
+        }
     }
 }

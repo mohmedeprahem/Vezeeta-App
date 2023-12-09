@@ -15,5 +15,11 @@ namespace Application.Interfaces.Services
             string doctorId,
             int price
         );
+
+        public Task<IdentityResult> UpdateAppointmentTimeAsync(
+            string doctorId,
+            UpdateAppointmentTimeDto updateAppointmentTimeDto,
+            int AppointmentTimeId
+        );
     }
 }
