@@ -1,15 +1,15 @@
-﻿using Core.enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.enums;
 
 namespace Infrastructure.Helpers.GeneralFunctions
 {
     public class HelperFunctions
     {
-        public DateTime GetNextWeekday(string day)
+        public DateOnly GetNextWeekday(string day)
         {
             DateTime currentDate = DateTime.UtcNow;
             DayOfWeek currentDayOfWeek = currentDate.DayOfWeek;
@@ -22,7 +22,7 @@ namespace Infrastructure.Helpers.GeneralFunctions
             // Add the days to the current date to get the target day in the next week
             DateTime nextWeekday = currentDate.AddDays(daysUntilTargetDay);
 
-            return nextWeekday;
+            return DateOnly.FromDateTime(nextWeekday);
         }
     }
 }
