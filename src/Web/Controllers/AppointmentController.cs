@@ -51,7 +51,15 @@ namespace Web.Controllers
                 {
                     return BadRequest(appointmentResult);
                 }
-                return Created();
+                return StatusCode(
+                    201,
+                    new
+                    {
+                        success = true,
+                        statusCode = 201,
+                        messgae = "Appointment created successfully.",
+                    }
+                );
             }
             catch (Exception ex)
             {
