@@ -92,6 +92,18 @@ namespace Infrastructure.DataBase.Etension
                 }
             }
 
+            // Seed Discount Types
+            if (!context.DiscountTypes.Any())
+            {
+                foreach (
+                    DiscountTypeEnum type in Enum.GetValues(typeof(DiscountTypeEnum))
+                        .Cast<DiscountTypeEnum>()
+                )
+                {
+                    await context.DiscountTypes.AddAsync(new DiscountType { Name = type });
+                }
+            }
+
             await context.SaveChangesAsync();
         }
     }
