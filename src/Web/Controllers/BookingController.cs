@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Interfaces.Services;
 using Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(policy: "PatientOnly")]
         public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDto createBookingDto)
         {
             try
