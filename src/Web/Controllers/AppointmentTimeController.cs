@@ -67,5 +67,51 @@ namespace Web.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpDelete("{AppointmentTimeId}")]
+        [Authorize(policy: "DoctorOnly")]
+        public async Task<IActionResult> DeleteAppointmentTimeAsync(
+            [FromRoute] int AppointmentTimeId
+        )
+        {
+            try
+            {
+                // Get doctor id
+                ClaimsPrincipal user = HttpContext.User;
+                string doctorId = user.FindFirst("Id")?.Value;
+                if (doctorId == null)
+                {
+                    return Unauthorized();
+                }
+
+                // Update appointment
+                IdentityResult result = await _appointmentService.DeleteAppointmentTimeAsync(
+                    doctorId,
+                    AppointmentTimeId
+                );
+
+                if (!result.Succeeded)
+                {
+                    if (result.Errors.Any(error => error.Code == "NotFound"))
+                    {
+                        return NotFound();
+                    }
+                    else if (result.Errors.Any(error => error.Code == "NotAuthorized"))
+                    {
+                        return Forbid();
+                    }
+                    else
+                    {
+                        throw new Exception("Failed to update appointment time");
+                    }
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
