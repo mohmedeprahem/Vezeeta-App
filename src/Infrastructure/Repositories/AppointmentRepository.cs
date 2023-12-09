@@ -126,5 +126,51 @@ namespace Infrastructure.Repositories
                 return IdentityResult.Failed();
             }
         }
+
+        public async Task<IdentityResult> UpdateAppointmentTimeAsync(
+            int appointmentTimeId,
+            TimeOnly time
+        )
+        {
+            Time timeEntity = await GetOrCreateTimeEntityAsync(time);
+
+            AppointmentTime? appointmentTime = await _appDbContext
+                .AppointmentTimes
+                .FindAsync(appointmentTimeId);
+
+            if (appointmentTime == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "AppointmentTimeNotFound",
+                        Description = "AppointmentTime not found."
+                    }
+                );
+            }
+
+            appointmentTime.TimeId = timeEntity.Id;
+            return IdentityResult.Success;
+        }
+
+        private async Task<Time> GetOrCreateTimeEntityAsync(TimeOnly time)
+        {
+            // Check if the Time entity with the specified TimeValue already exists
+            Time? timeEntity = await _appDbContext
+                .Times
+                .FirstOrDefaultAsync(t => t.TimeValue == time);
+
+            if (timeEntity == null)
+            {
+                // If it doesn't exist, create a new Time entity
+                timeEntity = new Time { TimeValue = time };
+
+                // Add the new Time entity to the database
+                await _appDbContext.Times.AddAsync(timeEntity);
+                await _appDbContext.SaveChangesAsync();
+            }
+
+            return timeEntity;
+        }
     }
 }
