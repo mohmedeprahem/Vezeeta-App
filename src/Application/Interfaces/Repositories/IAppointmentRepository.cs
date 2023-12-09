@@ -16,5 +16,6 @@ namespace Application.Interfaces.Repositories
             TimeOnly time
         );
         public Task<bool> IsDayAddedBefore(int dayId, string doctorId);
+        public Task<AppointmentTime> GetAppointmentTimeById(int id, string[] includes = null);
     }
 }

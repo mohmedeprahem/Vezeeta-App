@@ -76,11 +76,25 @@ namespace Infrastructure.Repositories
             // get day as string
             DaysEnum dayEnum = (DaysEnum)dayId;
 
-            DateTime nextWeekday = _helperFunctions.GetNextWeekday(dayEnum.ToString());
+            DateOnly nextWeekday = _helperFunctions.GetNextWeekday(dayEnum.ToString());
 
             return await _appDbContext
                 .Appointments
                 .AnyAsync(a => a.DayId == dayId && a.DoctorId == doctorId && a.Date == nextWeekday);
+        }
+
+        public async Task<AppointmentTime> GetAppointmentTimeById(int id, string[] includes = null)
+        {
+            IQueryable<AppointmentTime> query = _appDbContext.Set<AppointmentTime>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(at => at.Id == id);
         }
     }
 }
