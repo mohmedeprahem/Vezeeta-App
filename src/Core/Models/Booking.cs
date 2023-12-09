@@ -22,9 +22,11 @@ namespace Core.Models
 
         [Range(0, int.MaxValue)]
         public int FinalPrice { get; set; }
+        public int SpecializationId { get; set; }
         public BookingStatus BookingStatus { get; set; }
         public ApplicationUser Patient { get; set; }
         public Discount Discount { get; set; }
         public AppointmentTime AppointmentTime { get; set; }
+        public Specialization Specialization { get; set; }
     }
 }
