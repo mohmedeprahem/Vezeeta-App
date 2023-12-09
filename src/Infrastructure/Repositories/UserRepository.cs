@@ -95,5 +95,19 @@ namespace Infrastructure.Repositories
         {
             return await _userManager.FindByIdAsync(id);
         }
+
+        public async Task<ApplicationUser> GetUserById(string id, string?[] includes)
+        {
+            IQueryable<ApplicationUser> query = _appDbContext.Set<ApplicationUser>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(u => u.Id == id);
+        }
     }
 }
