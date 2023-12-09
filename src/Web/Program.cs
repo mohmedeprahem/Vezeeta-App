@@ -98,6 +98,7 @@ builder.Services.AddScoped<HelperFunctions>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IExaminationPriceRepository, ExaminationPriceRepository>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMappingProfile));
