@@ -176,5 +176,38 @@ namespace Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();
             return identityResult;
         }
+
+        public async Task<IdentityResult> DeleteAppointmentTimeAsync(
+            string doctorId,
+            int AppointmentTimeId
+        )
+        {
+            AppointmentTime appointmentTime = await _unitOfWork
+                .AppointmentRepository
+                .GetAppointmentTimeById(AppointmentTimeId, ["Appointment"]);
+
+            if (appointmentTime == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "NotFound",
+                        Description = "Appointment time not found"
+                    }
+                );
+            }
+
+            if (appointmentTime.Appointment.DoctorId != doctorId || appointmentTime.IsBooked)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
+                );
+            }
+
+            // Delete appointment time
+            await _unitOfWork.AppointmentRepository.DeleteAppointmentTimeAsync(AppointmentTimeId);
+            await _unitOfWork.SaveChangesAsync();
+            return IdentityResult.Success;
+        }
     }
 }

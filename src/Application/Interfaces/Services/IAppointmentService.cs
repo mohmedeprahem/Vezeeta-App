@@ -21,5 +21,9 @@ namespace Application.Interfaces.Services
             UpdateAppointmentTimeDto updateAppointmentTimeDto,
             int AppointmentTimeId
         );
+        public Task<IdentityResult> DeleteAppointmentTimeAsync(
+            string doctorId,
+            int AppointmentTimeId
+        );
     }
 }
