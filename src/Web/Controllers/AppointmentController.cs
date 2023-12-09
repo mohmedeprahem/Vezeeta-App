@@ -22,7 +22,7 @@ namespace Web.Controllers
         [HttpPost]
         [Authorize(policy: "DoctorOnly")]
         public async Task<IActionResult> CreateAppointmentDayAsync(
-            [FromForm] CreateAppointmentDto createAppointmentDto
+            [FromBody] CreateAppointmentDto createAppointmentDto
         )
         {
             try
