@@ -8,7 +8,7 @@ namespace Core.enums
 {
     public enum DiscountTypeEnum
     {
-        Percentage,
+        Percentage = 1,
         Value
     }
 }

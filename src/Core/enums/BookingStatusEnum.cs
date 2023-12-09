@@ -8,7 +8,7 @@ namespace Core.enums
 {
     public enum BookingStatusEnum
     {
-        Binding,
+        Binding = 1,
         Completed,
         Cancelled
     }
