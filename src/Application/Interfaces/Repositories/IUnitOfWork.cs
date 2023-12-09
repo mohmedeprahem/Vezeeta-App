@@ -13,6 +13,8 @@ namespace Application.Interfaces.Repositories
         IAppointmentRepository AppointmentRepository { get; }
         IDiscountRepository DiscountRepository { get; }
         IExaminationPriceRepository ExaminationPriceRepository { get; }
+        IBookingRepository BookingRepository { get; }
+
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitAsync();
