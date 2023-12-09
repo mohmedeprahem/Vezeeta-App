@@ -2,6 +2,7 @@
 using Application.Interfaces.Services;
 using Core.enums;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(policy: "AdminOnly")]
         public async Task<IActionResult> CreateDiscount(
             [FromBody] CreateDiscountDto createDiscountDto
         )
