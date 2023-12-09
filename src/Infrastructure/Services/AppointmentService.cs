@@ -45,6 +45,13 @@ namespace Infrastructure.Services
                 throw new Exception("Doctor not found");
             }
 
+            // Update price
+            await _unitOfWork
+                .ExaminationPriceRepository
+                .UpdateExaminationPrices(
+                    new ExaminationPrice { DoctorId = doctorId, price = price }
+                );
+
             await _unitOfWork.BeginTransactionAsync();
             {
                 try
@@ -56,9 +63,11 @@ namespace Infrastructure.Services
                         if (Enum.TryParse(appointmentDayDto.Day, out DaysEnum day))
                         {
                             // Check if the appointment day grater than today
-                            DateTime nextWeekday = _helperFunctions.GetNextWeekday(day.ToString());
+                            DateOnly nextWeekday = _helperFunctions.GetNextWeekday(day.ToString());
 
-                            if (nextWeekday <= DateTime.UtcNow)
+                            DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow);
+
+                            if (nextWeekday <= currentDate)
                             {
                                 throw new Exception("Invalid day");
                             }
