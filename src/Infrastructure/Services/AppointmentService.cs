@@ -44,6 +44,7 @@ namespace Infrastructure.Services
             {
                 throw new Exception("Doctor not found");
             }
+            await _unitOfWork.BeginTransactionAsync();
 
             // Update price
             await _unitOfWork
@@ -51,8 +52,6 @@ namespace Infrastructure.Services
                 .UpdateExaminationPrices(
                     new ExaminationPrice { DoctorId = doctorId, price = price }
                 );
-
-            await _unitOfWork.BeginTransactionAsync();
             {
                 try
                 {
