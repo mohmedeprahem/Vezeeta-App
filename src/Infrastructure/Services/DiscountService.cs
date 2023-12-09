@@ -55,7 +55,7 @@ namespace Infrastructure.Services
                     new IdentityError
                     {
                         Code = "Create New appointment failed",
-                        Description = ex.ToString()
+                        Description = "Creation appointment failed"
                     }
                 );
             }
