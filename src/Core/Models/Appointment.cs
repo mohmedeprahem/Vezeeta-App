@@ -16,7 +16,7 @@ namespace Core.Models
 
         [DataType(DataType.Date)]
         [Column(TypeName = "date")]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public ICollection<AppointmentTime> Times { get; set; }
         public ApplicationUser Doctor { get; set; }
         public Day Day { get; set; }
