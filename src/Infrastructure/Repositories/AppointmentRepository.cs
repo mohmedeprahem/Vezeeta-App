@@ -9,6 +9,7 @@ using Core.enums;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Infrastructure.Helpers.GeneralFunctions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
@@ -95,6 +96,35 @@ namespace Infrastructure.Repositories
                 }
             }
             return await query.FirstOrDefaultAsync(at => at.Id == id);
+        }
+
+        public async Task<IdentityResult> ChangeAppointmentTimeStatus(int id)
+        {
+            try
+            {
+                AppointmentTime? appointmentTime = await _appDbContext
+                    .AppointmentTimes
+                    .FindAsync(id);
+                if (appointmentTime == null)
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError
+                        {
+                            Code = "AppointmentTime",
+                            Description = "AppointmentTime not found"
+                        }
+                    );
+                }
+                else
+                {
+                    appointmentTime.IsBooked = !appointmentTime.IsBooked;
+                    return IdentityResult.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed();
+            }
         }
     }
 }
