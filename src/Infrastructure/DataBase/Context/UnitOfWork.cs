@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces.Repositories;
+using Core.Models;
 using Infrastructure.Helpers.GeneralFunctions;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.DataBase.Context
@@ -16,6 +18,7 @@ namespace Infrastructure.DataBase.Context
 
         public IAppointmentRepository AppointmentRepository { get; private set; }
         public IDiscountRepository DiscountRepository { get; private set; }
+        public IExaminationPriceRepository ExaminationPriceRepository { get; private set; }
 
         private IDbContextTransaction _transaction;
 
@@ -24,6 +27,7 @@ namespace Infrastructure.DataBase.Context
             _dbContext = dbContext;
             AppointmentRepository = new AppointmentRepository(_dbContext, new HelperFunctions());
             DiscountRepository = new DiscountRepository(_dbContext);
+            ExaminationPriceRepository = new ExaminationPriceRepository(_dbContext);
 
             _transaction = null;
         }
