@@ -145,5 +145,22 @@ namespace Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();
             return discountResult;
         }
+
+        public async Task<IdentityResult> DeactivateDiscountAsync(int discountId)
+        {
+            Discount discount = await _unitOfWork.DiscountRepository.GetDiscountById(discountId);
+
+            if (discount == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
+            }
+
+            IdentityResult discountResult = await _unitOfWork
+                .DiscountRepository
+                .DeactivateDiscountAsync(discountId);
+
+            await _unitOfWork.SaveChangesAsync();
+            return discountResult;
+        }
     }
 }
