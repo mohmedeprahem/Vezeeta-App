@@ -44,16 +44,15 @@ namespace Web.Controllers
 
                 if (!identityResult.Succeeded)
                 {
-                    if (identityResult.Errors.Any(error => error.Code == "BookingsExist"))
+                    if (identityResult.Errors.Any(error => error.Code == "DuplicateCode"))
                     {
-                        ModelState.AddModelError("Code", "Discount name already exists.");
                         return StatusCode(
                             403,
                             new
                             {
                                 success = false,
                                 statusCode = 403,
-                                messgae = ModelState,
+                                messgae = "Discount name already exists.",
                             }
                         );
                     }
@@ -98,6 +97,18 @@ namespace Web.Controllers
 
                 if (!identityResult.Succeeded)
                 {
+                    if (identityResult.Errors.Any(error => error.Code == "BookingsExist"))
+                    {
+                        return StatusCode(
+                            403,
+                            new
+                            {
+                                success = false,
+                                statusCode = 403,
+                                messgae = "Discount Bookings Exist",
+                            }
+                        );
+                    }
                     return BadRequest(identityResult);
                 }
 
@@ -107,6 +118,48 @@ namespace Web.Controllers
                         sacces = true,
                         statusCode = 200,
                         message = "Discount updated successfully.",
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpDelete("{discountId}")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> DeleteDiscount([FromRoute] int discountId)
+        {
+            try
+            {
+                IdentityResult identityResult = await _discountService.DeleteDiscountAsync(
+                    discountId
+                );
+
+                if (!identityResult.Succeeded)
+                {
+                    if (identityResult.Errors.Any(error => error.Code == "BookingsExist"))
+                    {
+                        return StatusCode(
+                            403,
+                            new
+                            {
+                                success = false,
+                                statusCode = 403,
+                                messgae = "Discount Bookings Exist",
+                            }
+                        );
+                    }
+                    return BadRequest(identityResult);
+                }
+
+                return Ok(
+                    new
+                    {
+                        sacces = true,
+                        statusCode = 200,
+                        message = "Discount deleted successfully.",
                     }
                 );
             }
