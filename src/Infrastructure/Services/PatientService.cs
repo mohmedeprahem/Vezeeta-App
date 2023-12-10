@@ -54,7 +54,6 @@ namespace Infrastructure.Services
                     "PatientBookings.AppointmentTime.Time",
                     "PatientBookings.AppointmentTime.Appointment",
                     "PatientBookings.AppointmentTime.Appointment.Day",
-                    "PatientBookings.AppointmentTime.Appointment",
                     "PatientBookings.AppointmentTime.Appointment.Doctor"
                 ]
             );
@@ -64,7 +63,7 @@ namespace Infrastructure.Services
                 Image = user.Image,
                 FullName = user.FullName,
                 Email = user.Email,
-                Gender = user.Email,
+                Gender = user.Gender.ToString(),
                 DateOfBirth = user.DateOfBirth.ToString("dd/MM/yyyy"),
                 Requests = user.PatientBookings
                     .Select(
