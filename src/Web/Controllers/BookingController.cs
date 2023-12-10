@@ -59,7 +59,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.ToString());
+                return StatusCode(500, "Internal Server Error");
             }
         }
 
@@ -113,7 +113,61 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.ToString());
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPost("{bookingId}/cancel")]
+        [Authorize(policy: "PatientOnly")]
+        public async Task<IActionResult> CancelBooking(int bookingId)
+        {
+            try
+            {
+                // Access claims from the current user's ClaimsPrincipal
+                ClaimsPrincipal user = HttpContext.User;
+
+                // Get the value of a specific claim
+                string? userId = user.FindFirst("Id")?.Value;
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                IdentityResult bookingResult = await _bookingService.CancelBookingAsync(
+                    bookingId,
+                    userId
+                );
+
+                if (!bookingResult.Succeeded)
+                {
+                    if (!bookingResult.Succeeded)
+                    {
+                        if (bookingResult.Errors.Any(error => error.Code == "NotFound"))
+                        {
+                            return NotFound();
+                        }
+                        else if (bookingResult.Errors.Any(error => error.Code == "NotAuthorized"))
+                        {
+                            return Forbid();
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to update appointment time");
+                        }
+                    }
+                }
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        message = "Booking cancelled successfully"
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
             }
         }
     }
