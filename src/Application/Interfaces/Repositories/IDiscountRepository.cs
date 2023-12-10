@@ -12,5 +12,7 @@ namespace Application.Interfaces.Repositories
     {
         public Task<IdentityResult> CreateDiscountAsync(Discount discount);
         public Task<Discount> GetDiscountByCodeAsync(string name);
+        public Task<Discount> GetDiscountById(int id, string[] includes = null);
+        public Task<IdentityResult> UpdateDiscount(Discount updatedDiscount, int id);
     }
 }
