@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Core.Models;
@@ -113,7 +114,7 @@ namespace Web.Controllers
         {
             try
             {
-                ApplicationUser patientsInfo = await _patientService.GetPatientById(id);
+                PatientAllInfoDto patientsInfo = await _patientService.GetAllInfoPatientById(id);
 
                 if (patientsInfo == null)
                 {
@@ -125,16 +126,7 @@ namespace Web.Controllers
                     {
                         succes = true,
                         statusCode = 200,
-                        patient = new
-                        {
-                            image = patientsInfo.Image,
-                            fullName = patientsInfo.FullName,
-                            email = patientsInfo.Email,
-                            phoneNumber = patientsInfo.PhoneNumber,
-                            gender = patientsInfo.Gender.ToString(),
-                            dateOfBirth = patientsInfo.DateOfBirth.ToString("dd/MM/yyyy")
-                        },
-                        requests = Array.Empty<Booking>()
+                        patient = patientsInfo
                     }
                 );
             }
