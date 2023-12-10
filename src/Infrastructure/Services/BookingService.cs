@@ -259,5 +259,15 @@ namespace Infrastructure.Services
         {
             return await _unitOfWork.BookingRepository.GetTopSpecializationByBooking();
         }
+
+        public async Task<List<Booking>> GetBookingsByPatientIdAsync(
+            string patientId,
+            string[] includes = null
+        )
+        {
+            return await _unitOfWork
+                .BookingRepository
+                .GetBookingsByPatientIdAsync(patientId, includes);
+        }
     }
 }
