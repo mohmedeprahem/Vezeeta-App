@@ -112,5 +112,38 @@ namespace Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();
             return discountResult;
         }
+
+        public async Task<IdentityResult> DeleteDiscountAsync(int discountId)
+        {
+            // Retrieve the discount entity by ID
+            var discount = await _unitOfWork
+                .DiscountRepository
+                .GetDiscountById(discountId, ["Bookings"]);
+
+            if (discount == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
+            }
+
+            // Check if discount has bookings
+            if (discount.Bookings.Count > 0)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "BookingsExist",
+                        Description = "Discount Bookings Exist"
+                    }
+                );
+            }
+
+            // Remove the discount entity from the repository
+            IdentityResult discountResult = await _unitOfWork
+                .DiscountRepository
+                .DeleteDiscountAsync(discountId);
+
+            await _unitOfWork.SaveChangesAsync();
+            return discountResult;
+        }
     }
 }
