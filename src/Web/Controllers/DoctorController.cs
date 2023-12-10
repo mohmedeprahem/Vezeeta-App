@@ -164,7 +164,7 @@ namespace Web.Controllers
                 }
 
                 // Get total number of patients
-                int totalDoctorsCount = await _doctorService.GetDoctorsCount();
+                int totalDoctorsCount = await _doctorService.GetDoctorsCountByString(search);
 
                 int maxPages = (int)Math.Ceiling((double)totalDoctorsCount / size);
 
