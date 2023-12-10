@@ -18,6 +18,7 @@ namespace Application.Mappers
             CreateMap<DoctorDto, ApplicationUser>();
             CreateMap<UpdateDoctorDto, ApplicationUser>();
             CreateMap<CreateDiscountDto, Discount>();
+            CreateMap<UpdateDiscountDto, Discount>();
         }
     }
 }
