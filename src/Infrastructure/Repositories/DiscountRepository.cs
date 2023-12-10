@@ -88,5 +88,18 @@ namespace Infrastructure.Repositories
             }
             return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
         }
+
+        public async Task<IdentityResult> DeactivateDiscountAsync(int discountId)
+        {
+            Discount discount = await _appDbContext.Discounts.FindAsync(discountId);
+
+            if (discount != null)
+            {
+                discount.IsActivated = false;
+
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
+        }
     }
 }
