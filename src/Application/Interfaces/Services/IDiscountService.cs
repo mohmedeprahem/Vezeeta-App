@@ -16,5 +16,6 @@ namespace Application.Interfaces.Services
             UpdateDiscountDto discountDto
         );
         public Task<IdentityResult> DeleteDiscountAsync(int discountId);
+        public Task<IdentityResult> DeactivateDiscountAsync(int discountId);
     }
 }
