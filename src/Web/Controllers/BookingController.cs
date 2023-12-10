@@ -62,5 +62,59 @@ namespace Web.Controllers
                 return StatusCode(500, ex.ToString());
             }
         }
+
+        [HttpPost("{bookingId}/confirm")]
+        [Authorize(policy: "DoctorOnly")]
+        public async Task<IActionResult> ConfirmBooking(int bookingId)
+        {
+            try
+            {
+                // Access claims from the current user's ClaimsPrincipal
+                ClaimsPrincipal user = HttpContext.User;
+
+                // Get the value of a specific claim
+                string? userId = user.FindFirst("Id")?.Value;
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                IdentityResult bookingResult = await _bookingService.ConfirmBookingAsync(
+                    bookingId,
+                    userId
+                );
+
+                if (!bookingResult.Succeeded)
+                {
+                    if (!bookingResult.Succeeded)
+                    {
+                        if (bookingResult.Errors.Any(error => error.Code == "NotFound"))
+                        {
+                            return NotFound();
+                        }
+                        else if (bookingResult.Errors.Any(error => error.Code == "NotAuthorized"))
+                        {
+                            return Forbid();
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to update appointment time");
+                        }
+                    }
+                }
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        message = "Booking confirmed successfully"
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToString());
+            }
+        }
     }
 }
