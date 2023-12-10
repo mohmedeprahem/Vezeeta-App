@@ -13,6 +13,7 @@ using Core.Models;
 using Infrastructure.Helpers.GeneralFunctions;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Services
@@ -268,6 +269,19 @@ namespace Infrastructure.Services
             return await _unitOfWork
                 .BookingRepository
                 .GetBookingsByPatientIdAsync(patientId, includes);
+        }
+
+        public async Task<PaginatedBookingsDto> GetBookingsByDoctorIdAsync(
+            string doctorId,
+            int pageSize,
+            int pageNumber,
+            DateOnly date = default,
+            string[] includes = null
+        )
+        {
+            return await _unitOfWork
+                .BookingRepository
+                .GetBookingsByDoctorIdAsync(doctorId, pageSize, pageNumber, date, includes);
         }
     }
 }

@@ -25,5 +25,12 @@ namespace Application.Interfaces.Services
             string patientId,
             string[] includes = null
         );
+        public Task<PaginatedBookingsDto> GetBookingsByDoctorIdAsync(
+            string doctorId,
+            int pageSize = 10,
+            int pageNumber = 1,
+            DateOnly date = default,
+            string[] includes = null
+        );
     }
 }
