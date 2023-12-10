@@ -144,5 +144,42 @@ namespace Infrastructure.Repositories
 
             return await query.Where(b => b.PatientId == patientId).ToListAsync();
         }
+
+        public async Task<PaginatedBookingsDto> GetBookingsByDoctorIdAsync(
+            string doctorId,
+            int pageSize = 10,
+            int pageNumber = 1,
+            DateOnly date = default,
+            string[] includes = null
+        )
+        {
+            IQueryable<Booking> query = _appDbContext.Set<Booking>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            query.Include(b => b.AppointmentTime).ThenInclude(at => at.Appointment);
+
+            int totalItems = await query
+                .Where(b => b.AppointmentTime.Appointment.DoctorId == doctorId)
+                .CountAsync();
+
+            var bookings = await query
+                .Where(b => b.AppointmentTime.Appointment.DoctorId == doctorId)
+                .Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize)
+                .ToListAsync();
+
+            return new PaginatedBookingsDto
+            {
+                TotalBookings = totalItems,
+                Bookings = bookings,
+                MaxPages = (int)Math.Ceiling((double)totalItems / pageSize)
+            };
+        }
     }
 }
