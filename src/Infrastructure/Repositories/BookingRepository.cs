@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Dtos;
 using Application.Interfaces.Repositories;
+using Core.enums;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Repositories
 {
@@ -45,6 +48,49 @@ namespace Infrastructure.Repositories
                 }
             }
             return await query.FirstOrDefaultAsync(at => at.Id == id);
+        }
+
+        public async Task<NumOfRequestsDto> GetBookingCountsAsync(string lastDate = "")
+        {
+            NumOfRequestsDto numOfRequestsDto;
+
+            DateTime lastWeekStartDate = lastDate switch
+            {
+                "day" => DateTime.UtcNow.AddDays(-1),
+                "week" => DateTime.UtcNow.AddDays(-7),
+                "month" => DateTime.UtcNow.AddDays(-30),
+                "year" => DateTime.UtcNow.AddDays(-365),
+                _ => DateTime.UtcNow.AddDays(-7)
+            };
+
+            IQueryable<Booking> query = _appDbContext.Bookings;
+
+            if (!lastDate.IsNullOrEmpty())
+            {
+                query = query.Where(b => b.CreatedAt >= lastWeekStartDate);
+            }
+
+            var result = await query
+                .GroupBy(b => b.BookingStatusId)
+                .Select(group => new { StatusId = group.Key, Count = group.Count() })
+                .ToListAsync();
+
+            numOfRequestsDto = new NumOfRequestsDto
+            {
+                ConfirmedRequests =
+                    result
+                        .FirstOrDefault(r => r.StatusId == (int)BookingStatusEnum.Completed)
+                        ?.Count ?? 0,
+                PendingRequests =
+                    result.FirstOrDefault(r => r.StatusId == (int)BookingStatusEnum.Binding)?.Count
+                    ?? 0,
+                CancelledRequests5 =
+                    result
+                        .FirstOrDefault(r => r.StatusId == (int)BookingStatusEnum.Cancelled)
+                        ?.Count ?? 0
+            };
+
+            return numOfRequestsDto;
         }
     }
 }
