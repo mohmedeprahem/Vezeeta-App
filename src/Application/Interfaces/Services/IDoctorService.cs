@@ -21,5 +21,6 @@ namespace Application.Interfaces.Services
         public Task<ApplicationUser> GetDoctorById(string id);
         public Task<IdentityResult> UpdateDoctor(string doctorId, UpdateDoctorDto model);
         public Task<int> GetDoctorsCountByString(string search = "");
+        public Task<IdentityResult> DeleteDoctor(string userId);
     }
 }

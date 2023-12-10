@@ -111,5 +111,39 @@ namespace Infrastructure.Services
         {
             return await _doctorRepository.GetDoctorCountByString(search);
         }
+
+        public async Task<IdentityResult> DeleteDoctor(string userId)
+        {
+            ApplicationUser doctor = await _doctorRepository.GetDoctorById(
+                userId,
+                ["Appointments", "Appointments.Times", "Appointments.Times.Booking"]
+            );
+            if (doctor == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
+            }
+
+            if (doctor.Appointments != null)
+            {
+                foreach (var appointment in doctor.Appointments)
+                {
+                    if (appointment.Times != null)
+                    {
+                        foreach (var time in appointment.Times)
+                        {
+                            if (time.Booking != null)
+                            {
+                                return IdentityResult.Failed(
+                                    new IdentityError { Code = "NotAuthorized" }
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            await _doctorRepository.DeleteDoctor(doctor);
+            return IdentityResult.Success;
+        }
     }
 }
