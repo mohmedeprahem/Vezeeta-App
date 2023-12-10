@@ -92,5 +92,39 @@ namespace Infrastructure.Repositories
 
             return numOfRequestsDto;
         }
+
+        public async Task<List<TopSpecializationDto>> GetTopSpecializationByBooking()
+        {
+            List<TopSpecializationDto> topSpecializationDto;
+
+            var result = await _appDbContext
+                .Bookings
+                .Include(b => b.Specialization)
+                .GroupBy(b => b.SpecializationId)
+                .Select(
+                    group =>
+                        new
+                        {
+                            SpecializationId = group.Key,
+                            Count = group.Count(),
+                            SpecializationName = group.FirstOrDefault().Specialization.Title
+                        }
+                )
+                .Take(5)
+                .ToListAsync();
+
+            topSpecializationDto = result
+                .Select(
+                    item =>
+                        new TopSpecializationDto
+                        {
+                            FullName = item.SpecializationName,
+                            BookingCount = item.Count
+                        }
+                )
+                .ToList();
+
+            return topSpecializationDto;
+        }
     }
 }
