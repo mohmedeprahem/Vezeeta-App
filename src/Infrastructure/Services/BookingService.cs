@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Core.enums;
@@ -247,6 +248,11 @@ namespace Infrastructure.Services
                 await _unitOfWork.RollbackAsync();
                 throw new Exception(ex.ToString());
             }
+        }
+
+        public async Task<NumOfRequestsDto> GetBookingCountsAsync(string lastDate = "")
+        {
+            return await _unitOfWork.BookingRepository.GetBookingCountsAsync(lastDate);
         }
     }
 }
