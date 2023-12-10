@@ -14,6 +14,7 @@ namespace Application.Interfaces.Repositories
         IDiscountRepository DiscountRepository { get; }
         IExaminationPriceRepository ExaminationPriceRepository { get; }
         IBookingRepository BookingRepository { get; }
+        IUserBookingTrackingRepository UserBookingTrackingRepository { get; }
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

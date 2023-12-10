@@ -21,6 +21,8 @@ namespace Infrastructure.DataBase.Context
         public IExaminationPriceRepository ExaminationPriceRepository { get; private set; }
         public IBookingRepository BookingRepository { get; private set; }
 
+        public IUserBookingTrackingRepository UserBookingTrackingRepository { get; private set; }
+
         private IDbContextTransaction _transaction;
 
         public UnitOfWork(AppDbContext dbContext)
@@ -30,6 +32,7 @@ namespace Infrastructure.DataBase.Context
             DiscountRepository = new DiscountRepository(_dbContext);
             ExaminationPriceRepository = new ExaminationPriceRepository(_dbContext);
             BookingRepository = new BookingRepository(_dbContext);
+            UserBookingTrackingRepository = new UserBookingTrackingRepository(_dbContext);
 
             _transaction = null;
         }
