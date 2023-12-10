@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Core.enums;
 using Core.Models;
 using Infrastructure.Helpers.GeneralFunctions;
 using Infrastructure.Repositories;
@@ -169,6 +170,39 @@ namespace Infrastructure.Services
                 await _unitOfWork.RollbackAsync();
                 throw new Exception(ex.ToString());
             }
+        }
+
+        public async Task<IdentityResult> ConfirmBookingAsync(int bookingId, string doctorId)
+        {
+            Booking booking = await _unitOfWork
+                .BookingRepository
+                .GetBookingByIdAsync(bookingId, ["AppointmentTime", "AppointmentTime.Appointment"]);
+
+            if (booking == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "NotFound",
+                        Description = "Appointment time not found"
+                    }
+                );
+            }
+
+            if (
+                booking.AppointmentTime.Appointment.DoctorId != doctorId
+                || booking.BookingStatusId != 1
+            )
+            {
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
+                );
+            }
+
+            booking.BookingStatusId = (int)BookingStatusEnum.Completed;
+
+            await _unitOfWork.SaveChangesAsync();
+            return IdentityResult.Success;
         }
     }
 }

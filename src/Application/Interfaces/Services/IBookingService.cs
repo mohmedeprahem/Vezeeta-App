@@ -14,5 +14,7 @@ namespace Application.Interfaces.Services
             string? discountCode,
             string patientId
         );
+
+        public Task<IdentityResult> ConfirmBookingAsync(int bookingId, string doctorId);
     }
 }
