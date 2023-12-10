@@ -139,9 +139,9 @@ namespace Web.Controllers
             }
         }
 
-        [HttpGet("bookings")]
+        [HttpGet("my-bookings")]
         [Authorize(policy: "PatientOnly")]
-        public async Task<IActionResult> GetPatientBookings()
+        public async Task<IActionResult> GetMyBookings()
         {
             try
             {
