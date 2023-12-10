@@ -168,5 +168,35 @@ namespace Web.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpPatch("{discountId}/deactivate")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> DeactivateDiscount([FromRoute] int discountId)
+        {
+            try
+            {
+                IdentityResult identityResult = await _discountService.DeactivateDiscountAsync(
+                    discountId
+                );
+
+                if (!identityResult.Succeeded)
+                {
+                    return BadRequest(identityResult);
+                }
+
+                return Ok(
+                    new
+                    {
+                        sacces = true,
+                        statusCode = 200,
+                        message = "Discount deactivated successfully.",
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
