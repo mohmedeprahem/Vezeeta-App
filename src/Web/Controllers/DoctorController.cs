@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Interfaces.Services;
 using Core.Models;
+using Infrastructure.Helpers.GeneralFunctions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,18 @@ namespace Web.Controllers
     public class DoctorController : Controller
     {
         private readonly IDoctorService _doctorService;
+        private readonly IBookingService _bookingService;
+        private readonly HelperFunctions _helperFunctions;
 
-        public DoctorController(IDoctorService doctorService)
+        public DoctorController(
+            IDoctorService doctorService,
+            IBookingService bookingService,
+            HelperFunctions helperFunctions
+        )
         {
             this._doctorService = doctorService;
+            this._bookingService = bookingService;
+            this._helperFunctions = helperFunctions;
         }
 
         [HttpGet("count")]
@@ -322,6 +331,76 @@ namespace Web.Controllers
                         success = true,
                         statusCode = 200,
                         message = "Doctor deleted successfully",
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("my-bookings")]
+        [Authorize(policy: "DoctorOnly")]
+        public async Task<IActionResult> GetMyBookings(
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] DateOnly date = default
+        )
+        {
+            try
+            {
+                // Access claims from the current user's ClaimsPrincipal
+                ClaimsPrincipal user = HttpContext.User;
+
+                // Get the value of a specific claim
+                string? doctorId = user.FindFirst("Id")?.Value;
+                if (doctorId == null)
+                {
+                    return Unauthorized();
+                }
+
+                PaginatedBookingsDto bookings = await _bookingService.GetBookingsByDoctorIdAsync(
+                    doctorId,
+                    pageSize,
+                    pageNumber,
+                    date,
+                    ["Patient"]
+                );
+
+                if (bookings == null || bookings.TotalBookings == 0)
+                {
+                    return NotFound("No bookings found for the specified doctor.");
+                }
+
+                // format response
+                var bookingsResponse = bookings
+                    .Bookings
+                    .Select(
+                        b =>
+                            new
+                            {
+                                PatientNames = b.Patient.FullName,
+                                Image = b.Patient.Image, // Replace with actual property
+                                Age = b.Patient.DateOfBirth,
+                                Gender = b.Patient.Gender.ToString(),
+                                Phone = b.Patient.PhoneNumber,
+                                Email = b.Patient.Email,
+                                Date = b.Date.ToString("d/M/yyyy")
+                            }
+                    )
+                    .ToList();
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        totalBookingCount = bookings.TotalBookings,
+                        maxPages = bookings.MaxPages,
+                        currentPage = pageNumber,
+                        itemsPerPage = pageSize,
+                        bookings = bookingsResponse
                     }
                 );
             }
