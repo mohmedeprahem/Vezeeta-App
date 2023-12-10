@@ -61,7 +61,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IdentityResult> UpdateDiscount(Discount updatedDiscount, int id)
         {
-            var existingDiscount = await _appDbContext.Discounts.FindAsync(id);
+            Discount existingDiscount = await _appDbContext.Discounts.FindAsync(id);
 
             if (existingDiscount == null)
             {
@@ -72,10 +72,21 @@ namespace Infrastructure.Repositories
 
             existingDiscount.DiscountCode = updatedDiscount.DiscountCode;
             existingDiscount.DiscountTypeId = updatedDiscount.DiscountTypeId;
-            existingDiscount.IsActivated = updatedDiscount.IsActivated;
             existingDiscount.DiscountValue = updatedDiscount.DiscountValue;
 
             return IdentityResult.Success;
+        }
+
+        public async Task<IdentityResult> DeleteDiscountAsync(int discountId)
+        {
+            var discount = await _appDbContext.Discounts.FindAsync(discountId);
+
+            if (discount != null)
+            {
+                _appDbContext.Discounts.Remove(discount);
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(new IdentityError { Code = "NotFound" });
         }
     }
 }
