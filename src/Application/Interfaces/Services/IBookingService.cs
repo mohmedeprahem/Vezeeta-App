@@ -16,5 +16,6 @@ namespace Application.Interfaces.Services
         );
 
         public Task<IdentityResult> ConfirmBookingAsync(int bookingId, string doctorId);
+        public Task<IdentityResult> CancelBookingAsync(int bookingId, string patientId);
     }
 }

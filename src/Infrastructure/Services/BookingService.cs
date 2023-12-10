@@ -204,5 +204,49 @@ namespace Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();
             return IdentityResult.Success;
         }
+
+        public async Task<IdentityResult> CancelBookingAsync(int bookingId, string patientId)
+        {
+            try
+            {
+                Booking booking = await _unitOfWork
+                    .BookingRepository
+                    .GetBookingByIdAsync(bookingId);
+
+                if (booking == null)
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError
+                        {
+                            Code = "NotFound",
+                            Description = "Appointment time not found"
+                        }
+                    );
+                }
+
+                if (
+                    booking.PatientId != patientId
+                    || booking.BookingStatusId != (int)BookingStatusEnum.Binding
+                )
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
+                    );
+                }
+                await _unitOfWork.BeginTransactionAsync();
+                booking.BookingStatusId = (int)BookingStatusEnum.Cancelled;
+
+                await _unitOfWork
+                    .AppointmentRepository
+                    .ChangeAppointmentTimeStatus(booking.AppointmentTimeId);
+                await _unitOfWork.CommitAsync();
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+                throw new Exception(ex.ToString());
+            }
+        }
     }
 }
