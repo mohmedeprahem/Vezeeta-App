@@ -67,7 +67,7 @@ namespace Web.Controllers
                     .ToList();
 
                 // Get total number of patients
-                int totalPatientsCount = await _patientService.GetPatientsCount();
+                int totalPatientsCount = await _patientService.GetPatientCountByStringAsync(search);
 
                 int maxPages = (int)Math.Ceiling((double)totalPatientsCount / size);
 
