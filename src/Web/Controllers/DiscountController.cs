@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-    [Route("api/discount")]
+    [Route("api/discount-code")]
     [ApiController]
     public class DiscountController : Controller
     {
@@ -44,7 +44,7 @@ namespace Web.Controllers
 
                 if (!identityResult.Succeeded)
                 {
-                    if (identityResult.Errors.Any(error => error.Code == "DuplicateCode"))
+                    if (identityResult.Errors.Any(error => error.Code == "BookingsExist"))
                     {
                         ModelState.AddModelError("Code", "Discount name already exists.");
                         return StatusCode(
@@ -68,6 +68,45 @@ namespace Web.Controllers
                         success = true,
                         statusCode = 201,
                         messgae = "Discount created successfully.",
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPut("{discountId}")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> UpdateDiscount(
+            [FromRoute] int discountId,
+            [FromBody] UpdateDiscountDto updateDiscountDto
+        )
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                IdentityResult identityResult = await _discountService.UpdateDiscountAsync(
+                    discountId,
+                    updateDiscountDto
+                );
+
+                if (!identityResult.Succeeded)
+                {
+                    return BadRequest(identityResult);
+                }
+
+                return Ok(
+                    new
+                    {
+                        sacces = true,
+                        statusCode = 200,
+                        message = "Discount updated successfully.",
                     }
                 );
             }
