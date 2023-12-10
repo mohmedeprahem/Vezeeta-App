@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using Application.Dtos;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Core.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -162,6 +164,31 @@ namespace Web.Controllers
                         succes = true,
                         statusCode = 200,
                         message = "Booking cancelled successfully"
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("count")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetBookingsCount([FromQuery] string lastDate = "")
+        {
+            try
+            {
+                NumOfRequestsDto numberOfDoctors = await _bookingService.GetBookingCountsAsync(
+                    lastDate
+                );
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        numberOfBookings = numberOfDoctors
                     }
                 );
             }
