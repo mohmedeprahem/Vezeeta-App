@@ -197,5 +197,29 @@ namespace Web.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpGet("top-specialization")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> GetTopSpecialization()
+        {
+            try
+            {
+                List<TopSpecializationDto> topSpecialization =
+                    await _bookingService.GetTopSpecializationByBooking();
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        TopSpecialization = topSpecialization
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
