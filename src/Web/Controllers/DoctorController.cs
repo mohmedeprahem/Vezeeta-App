@@ -294,5 +294,41 @@ namespace Web.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpDelete("{Id}")]
+        [Authorize(policy: "AdminOnly")]
+        public async Task<IActionResult> DeleteDoctor([FromRoute] string Id)
+        {
+            try
+            {
+                IdentityResult DoctorResult = await _doctorService.DeleteDoctor(Id);
+
+                if (!DoctorResult.Succeeded)
+                {
+                    if (DoctorResult.Errors.Any(error => error.Code == "NotFound"))
+                    {
+                        return NotFound();
+                    }
+                    if (DoctorResult.Errors.Any(error => error.Code == "NotAuthorized"))
+                    {
+                        return Forbid();
+                    }
+                    return BadRequest();
+                }
+
+                return Ok(
+                    new
+                    {
+                        success = true,
+                        statusCode = 200,
+                        message = "Doctor deleted successfully",
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }
