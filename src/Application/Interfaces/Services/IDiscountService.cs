@@ -11,5 +11,9 @@ namespace Application.Interfaces.Services
     public interface IDiscountService
     {
         public Task<IdentityResult> CreateDiscountAsync(CreateDiscountDto discountDto);
+        public Task<IdentityResult> UpdateDiscountAsync(
+            int discountId,
+            UpdateDiscountDto discountDto
+        );
     }
 }

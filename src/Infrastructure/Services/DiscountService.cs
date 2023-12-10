@@ -60,5 +60,57 @@ namespace Infrastructure.Services
                 );
             }
         }
+
+        public async Task<IdentityResult> UpdateDiscountAsync(
+            int discountId,
+            UpdateDiscountDto discountDto
+        )
+        {
+            Discount updatedDiscount = _mapper.Map<Discount>(discountDto);
+            Discount discount = await _unitOfWork
+                .DiscountRepository
+                .GetDiscountById(discountId, ["Bookings"]);
+
+            // Check if discount exists
+            if (discount == null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "NotFound", Description = "Discount Not Found" }
+                );
+            }
+
+            // Check if discountValeue is valid
+            if (updatedDiscount.DiscountTypeId == (int)DiscountTypeEnum.Percentage)
+                if (updatedDiscount.DiscountValue > 100)
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError
+                        {
+                            Code = "InvalidRequest",
+                            Description = "Discount Value Invalid"
+                        }
+                    );
+                }
+
+            // Check if discount has bookings
+            if (discount.Bookings.Count > 0)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Code = "BookingsExist",
+                        Description = "Discount Bookings Exist"
+                    }
+                );
+            }
+
+            // Update discount
+            IdentityResult discountResult = await _unitOfWork
+                .DiscountRepository
+                .UpdateDiscount(updatedDiscount, discountId);
+
+            await _unitOfWork.SaveChangesAsync();
+            return discountResult;
+        }
     }
 }
