@@ -13,5 +13,6 @@ namespace Application.Interfaces.Services
         public Task<List<ApplicationUser>> GetPatients(int page, int size, string search);
         public Task<int> GetPatientsCount(string lastDate = "");
         public Task<PatientAllInfoDto> GetAllInfoPatientById(string id);
+        public Task<int> GetPatientCountByStringAsync(string search = "");
     }
 }

@@ -9,6 +9,7 @@ using Application.Interfaces.Services;
 using Azure;
 using Core.enums;
 using Core.Models;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services
@@ -26,9 +27,9 @@ namespace Infrastructure.Services
         {
             return await _patientRepository.GetUsersByRole(
                 RolesEnum.Patient.ToString(),
-                page = 1,
-                size = 8,
-                search = ""
+                page,
+                size,
+                search
             );
         }
 
@@ -85,6 +86,11 @@ namespace Infrastructure.Services
             };
 
             return userDto;
+        }
+
+        public async Task<int> GetPatientCountByStringAsync(string search = "")
+        {
+            return await _patientRepository.GetPatientCountByStringAsync(search);
         }
     }
 }
