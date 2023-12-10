@@ -7,5 +7,8 @@ using Core.Models;
 
 namespace Application.Interfaces.Repositories
 {
-    public interface IPatientRepository : IUserRepository { }
+    public interface IPatientRepository : IUserRepository
+    {
+        public Task<int> GetPatientCountByStringAsync(string search = "");
+    }
 }

@@ -22,5 +22,31 @@ namespace Infrastructure.Repositories
             AppDbContext appDbContext
         )
             : base(userManager, appDbContext) { }
+
+        public async Task<int> GetPatientCountByStringAsync(string search = "")
+        {
+            // Get role id
+            IdentityRole? role = await _appDbContext
+                .Roles
+                .FirstOrDefaultAsync(r => r.Name == RolesEnum.Patient.ToString());
+            return await _appDbContext
+                .Users
+                .Join(
+                    _appDbContext.UserRoles,
+                    user => user.Id,
+                    userRole => userRole.UserId,
+                    (user, userRole) => new { User = user, UserRole = userRole }
+                )
+                .Where(
+                    joined =>
+                        joined.UserRole.RoleId == role.Id
+                        && (
+                            joined.User.FullName.Contains(search)
+                            || joined.User.Email.Contains(search)
+                            || joined.User.PhoneNumber.Contains(search)
+                        )
+                )
+                .CountAsync();
+        }
     }
 }
