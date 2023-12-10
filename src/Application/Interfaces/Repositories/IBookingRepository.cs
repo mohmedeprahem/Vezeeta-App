@@ -11,5 +11,6 @@ namespace Application.Interfaces.Repositories
     public interface IBookingRepository
     {
         public Task<IdentityResult> CreateBookingAsync(Booking booking);
+        public Task<Booking> GetBookingByIdAsync(int id, string[] includes = null);
     }
 }

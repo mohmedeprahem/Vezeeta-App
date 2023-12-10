@@ -7,6 +7,7 @@ using Application.Interfaces.Repositories;
 using Core.Models;
 using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -30,6 +31,20 @@ namespace Infrastructure.Repositories
             {
                 return IdentityResult.Failed(new IdentityError { Code = ex.Message });
             }
+        }
+
+        public async Task<Booking> GetBookingByIdAsync(int id, string[] includes = null)
+        {
+            IQueryable<Booking> query = _appDbContext.Set<Booking>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query.FirstOrDefaultAsync(at => at.Id == id);
         }
     }
 }
