@@ -107,7 +107,7 @@ namespace Infrastructure.Services
                     Price = finalPrice,
                     SpecializationId = doctor.SpecializationId ?? 1
                 };
-
+                await _unitOfWork.BeginTransactionAsync();
                 // Check if discount code is valid
                 if (discountCode != null)
                 {
@@ -151,12 +151,32 @@ namespace Infrastructure.Services
                         }
                         discount.IsActivated = false;
                         booking.DiscountId = discount.Id;
+
+                        // increase booking tracking
+                        UserBookingTracking userBookingTracking = await _unitOfWork
+                            .UserBookingTrackingRepository
+                            .GetById(patientId);
+                        if (
+                            userBookingTracking == null
+                            || userBookingTracking.AprovedBookingCount < 5
+                        )
+                        {
+                            return IdentityResult.Failed(
+                                new IdentityError
+                                {
+                                    Code = "DiscountCode",
+                                    Description = "NotAuthorized"
+                                }
+                            );
+                        }
+                        else
+                        {
+                            userBookingTracking.AprovedBookingCount -= 5;
+                        }
                     }
                 }
 
                 booking.FinalPrice = finalPrice;
-
-                await _unitOfWork.BeginTransactionAsync();
 
                 await _unitOfWork.BookingRepository.CreateBookingAsync(booking);
 
@@ -176,35 +196,65 @@ namespace Infrastructure.Services
 
         public async Task<IdentityResult> ConfirmBookingAsync(int bookingId, string doctorId)
         {
-            Booking booking = await _unitOfWork
-                .BookingRepository
-                .GetBookingByIdAsync(bookingId, ["AppointmentTime", "AppointmentTime.Appointment"]);
-
-            if (booking == null)
+            try
             {
-                return IdentityResult.Failed(
-                    new IdentityError
+                await _unitOfWork.BeginTransactionAsync();
+                Booking booking = await _unitOfWork
+                    .BookingRepository
+                    .GetBookingByIdAsync(
+                        bookingId,
+                        ["AppointmentTime", "AppointmentTime.Appointment"]
+                    );
+
+                if (booking == null)
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError
+                        {
+                            Code = "NotFound",
+                            Description = "Appointment time not found"
+                        }
+                    );
+                }
+
+                if (
+                    booking.AppointmentTime.Appointment.DoctorId != doctorId
+                    || booking.BookingStatusId != 1
+                )
+                {
+                    return IdentityResult.Failed(
+                        new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
+                    );
+                }
+
+                // increase booking tracking
+                UserBookingTracking userBookingTracking = await _unitOfWork
+                    .UserBookingTrackingRepository
+                    .GetById(booking.PatientId);
+                if (userBookingTracking == null)
+                {
+                    userBookingTracking = new UserBookingTracking
                     {
-                        Code = "NotFound",
-                        Description = "Appointment time not found"
-                    }
-                );
-            }
+                        PatientId = booking.PatientId,
+                        AprovedBookingCount = 1
+                    };
+                    await _unitOfWork.UserBookingTrackingRepository.Create(userBookingTracking);
+                }
+                else
+                {
+                    userBookingTracking.AprovedBookingCount += 1;
+                }
 
-            if (
-                booking.AppointmentTime.Appointment.DoctorId != doctorId
-                || booking.BookingStatusId != 1
-            )
+                booking.BookingStatusId = (int)BookingStatusEnum.Completed;
+
+                await _unitOfWork.CommitAsync();
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
             {
-                return IdentityResult.Failed(
-                    new IdentityError { Code = "NotAuthorized", Description = "Not authorized" }
-                );
+                await _unitOfWork.RollbackAsync();
+                throw new Exception(ex.ToString());
             }
-
-            booking.BookingStatusId = (int)BookingStatusEnum.Completed;
-
-            await _unitOfWork.SaveChangesAsync();
-            return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> CancelBookingAsync(int bookingId, string patientId)
