@@ -254,5 +254,10 @@ namespace Infrastructure.Services
         {
             return await _unitOfWork.BookingRepository.GetBookingCountsAsync(lastDate);
         }
+
+        public async Task<List<TopSpecializationDto>> GetTopSpecializationByBooking()
+        {
+            return await _unitOfWork.BookingRepository.GetTopSpecializationByBooking();
+        }
     }
 }
