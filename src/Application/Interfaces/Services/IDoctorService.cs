@@ -11,7 +11,12 @@ namespace Application.Interfaces.Services
 {
     public interface IDoctorService
     {
-        public Task<List<ApplicationUser>> GetDoctors(int page, int size, string search);
+        public Task<List<ApplicationUser>> GetDoctors(
+            int page,
+            int size,
+            string search,
+            string[] includes = null
+        );
         public Task<int> GetDoctorsCount(string lastDate = "");
         public Task<ApplicationUser> GetDoctorById(string id);
         public Task<IdentityResult> UpdateDoctor(string doctorId, UpdateDoctorDto model);

@@ -31,14 +31,14 @@ namespace Infrastructure.Services
             this._mapper = mapper;
         }
 
-        public async Task<List<ApplicationUser>> GetDoctors(int page, int size, string search)
+        public async Task<List<ApplicationUser>> GetDoctors(
+            int page,
+            int size,
+            string search,
+            string[] includes = null
+        )
         {
-            return await _doctorRepository.GetDoctors(
-                page = 1,
-                size = 8,
-                search = "",
-                new string[] { "Specialization" }
-            );
+            return await _doctorRepository.GetDoctors(page = 1, size = 8, search = "", includes);
         }
 
         public async Task<int> GetDoctorsCount(string lastDate = "")
