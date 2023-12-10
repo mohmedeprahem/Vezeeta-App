@@ -10,6 +10,7 @@ using Core.Models;
 using Infrastructure.DataBase.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Repositories
@@ -98,6 +99,32 @@ namespace Infrastructure.Repositories
             {
                 return IdentityResult.Failed();
             }
+        }
+
+        public async Task<int> GetDoctorCountByString(string search = "")
+        {
+            // Get role id
+            IdentityRole? role = await _appDbContext
+                .Roles
+                .FirstOrDefaultAsync(r => r.Name == "Doctor");
+            return await _appDbContext
+                .Users
+                .Join(
+                    _appDbContext.UserRoles,
+                    user => user.Id,
+                    userRole => userRole.UserId,
+                    (user, userRole) => new { User = user, UserRole = userRole }
+                )
+                .Where(
+                    joined =>
+                        joined.UserRole.RoleId == role.Id
+                        && (
+                            joined.User.FullName.Contains(search)
+                            || joined.User.Email.Contains(search)
+                            || joined.User.PhoneNumber.Contains(search)
+                        )
+                )
+                .CountAsync();
         }
     }
 }

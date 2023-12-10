@@ -38,7 +38,7 @@ namespace Infrastructure.Services
             string[] includes = null
         )
         {
-            return await _doctorRepository.GetDoctors(page = 1, size = 8, search = "", includes);
+            return await _doctorRepository.GetDoctors(page, size, search, includes);
         }
 
         public async Task<int> GetDoctorsCount(string lastDate = "")
@@ -105,6 +105,11 @@ namespace Infrastructure.Services
 
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<int> GetDoctorsCountByString(string search = "")
+        {
+            return await _doctorRepository.GetDoctorCountByString(search);
         }
     }
 }
