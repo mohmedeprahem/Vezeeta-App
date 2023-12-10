@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using System.Security.Claims;
+using Application.Dtos;
 using Application.Interfaces.Services;
 using Core.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -104,7 +105,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(policy: "AdminOnly")]
+        [Authorize(policy: "PatientOrAdminOnly")]
         public async Task<IActionResult> GetDoctors(
             [FromQuery] int page = 1,
             [FromQuery] int size = 1,
@@ -117,55 +118,137 @@ namespace Web.Controllers
                 {
                     return BadRequest();
                 }
+                // Access claims from the current user's ClaimsPrincipal
+                ClaimsPrincipal user = HttpContext.User;
 
+                // Get the value of a specific claim
+                string? userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+                if (userRole == null)
+                {
+                    return Unauthorized();
+                }
+                List<ApplicationUser> doctorsInfo;
+                // Get the value of a specific role
+                if (userRole == "Admin")
+                {
+                    doctorsInfo = await _doctorService.GetDoctors(
+                        page,
+                        size,
+                        search,
+                        ["Specialization"]
+                    );
+                }
+                else
+                {
+                    doctorsInfo = await _doctorService.GetDoctors(
+                        page,
+                        size,
+                        search,
+
+                        [
+                            "Specialization",
+                            "ExaminationPrice",
+                            "Appointments",
+                            "Appointments.Day",
+                            "Appointments.Times",
+                            "Appointments.Times.Time",
+                        ]
+                    );
+                }
                 // Get patients
-                List<ApplicationUser> doctorsInfo = await _doctorService.GetDoctors(
-                    page,
-                    size,
-                    search
-                );
+
 
                 if (doctorsInfo == null)
                 {
                     return NotFound();
                 }
 
-                // Format response
-                var doctorsResponse = doctorsInfo
-                    .Select(
-                        doctor =>
-                            new
-                            {
-                                id = doctor.Id,
-                                image = doctor.Image,
-                                fullName = doctor.FullName,
-                                email = doctor.Email,
-                                gender = doctor.Gender.ToString(),
-                                phoneNumber = doctor.PhoneNumber,
-                                dateOfBirth = doctor.DateOfBirth.ToString("dd/MM/yyyy"),
-                                specialize = doctor.Specialization != null
-                                    ? doctor.Specialization.Title
-                                    : null
-                            }
-                    )
-                    .ToList();
-
                 // Get total number of patients
                 int totalDoctorsCount = await _doctorService.GetDoctorsCount();
 
                 int maxPages = (int)Math.Ceiling((double)totalDoctorsCount / size);
 
-                return Ok(
-                    new
-                    {
-                        statusCode = 200,
-                        totalDoctorsCount,
-                        maxPages,
-                        currentPage = page,
-                        itemsPerPage = size,
-                        doctors = doctorsResponse
-                    }
-                );
+                if (userRole == "Admin")
+                {
+                    // Format response
+                    var doctorsResponse = doctorsInfo
+                        .Select(
+                            doctor =>
+                                new
+                                {
+                                    id = doctor.Id,
+                                    image = doctor.Image,
+                                    fullName = doctor.FullName,
+                                    email = doctor.Email,
+                                    gender = doctor.Gender.ToString(),
+                                    phoneNumber = doctor.PhoneNumber,
+                                    dateOfBirth = doctor.DateOfBirth.ToString("dd/MM/yyyy"),
+                                    specialize = doctor.Specialization != null
+                                        ? doctor.Specialization.Title
+                                        : null
+                                }
+                        )
+                        .ToList();
+
+                    return Ok(
+                        new
+                        {
+                            statusCode = 200,
+                            totalDoctorsCount,
+                            maxPages,
+                            currentPage = page,
+                            itemsPerPage = size,
+                            doctors = doctorsResponse
+                        }
+                    );
+                }
+                else
+                {
+                    var doctorsResponse = doctorsInfo
+                        .Select(
+                            doctor =>
+                                new
+                                {
+                                    Image = doctor.Image,
+                                    FullName = doctor.FullName,
+                                    Email = doctor.Email,
+                                    Phone = doctor.PhoneNumber,
+                                    Price = doctor.ExaminationPrice?.price,
+                                    Gender = doctor.Gender.ToString(),
+                                    Specialize = doctor.Specialization?.Title,
+                                    Appointments = doctor
+                                        .Appointments
+                                        ?.Select(
+                                            appointment =>
+                                                new
+                                                {
+                                                    Day = appointment.Day.Name,
+                                                    Times = appointment
+                                                        .Times
+                                                        .Select(
+                                                            time =>
+                                                                time.Time
+                                                                    ?.TimeValue
+                                                                    .ToString("h:mm tt")
+                                                        )
+                                                }
+                                        )
+                                }
+                        )
+                        .ToList();
+
+                    return Ok(
+                        new
+                        {
+                            statusCode = 200,
+                            totalDoctorsCount,
+                            maxPages,
+                            currentPage = page,
+                            itemsPerPage = size,
+                            doctors = doctorsResponse
+                        }
+                    );
+                }
             }
             catch (Exception ex)
             {
