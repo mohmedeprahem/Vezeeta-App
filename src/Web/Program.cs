@@ -81,6 +81,13 @@ builder
         options.AddPolicy("AdminOnly", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
         options.AddPolicy("DoctorOnly", p => p.RequireClaim(ClaimTypes.Role, "Doctor"));
         options.AddPolicy("PatientOnly", p => p.RequireClaim(ClaimTypes.Role, "Patient"));
+        options.AddPolicy(
+            "PatientOrAdminOnly",
+            policy =>
+            {
+                policy.RequireClaim(ClaimTypes.Role, "Admin", "Patient");
+            }
+        );
     });
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
