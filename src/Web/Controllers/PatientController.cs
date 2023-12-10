@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Application.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -13,10 +14,12 @@ namespace Web.Controllers
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
+        private readonly IBookingService _bookingService;
 
-        public PatientController(IPatientService patientService)
+        public PatientController(IPatientService patientService, IBookingService bookingService)
         {
             this._patientService = patientService;
+            this._bookingService = bookingService;
         }
 
         [HttpGet]
@@ -127,6 +130,74 @@ namespace Web.Controllers
                         succes = true,
                         statusCode = 200,
                         patient = patientsInfo
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpGet("bookings")]
+        [Authorize(policy: "PatientOnly")]
+        public async Task<IActionResult> GetPatientBookings()
+        {
+            try
+            {
+                // Access claims from the current user's ClaimsPrincipal
+                ClaimsPrincipal user = HttpContext.User;
+
+                // Get the value of a specific claim
+                string? userId = user.FindFirst("Id")?.Value;
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                List<Booking> bookingInfo = await _bookingService.GetBookingsByPatientIdAsync(
+                    userId,
+
+                    [
+                        "AppointmentTime",
+                        "BookingStatus",
+                        "Specialization",
+                        "Discount",
+                        "AppointmentTime.Time",
+                        "AppointmentTime.Appointment",
+                        "AppointmentTime.Appointment.Doctor",
+                        "AppointmentTime.Appointment.Day",
+                    ]
+                );
+
+                if (bookingInfo == null)
+                {
+                    return NotFound();
+                }
+
+                // Format response
+                var bookingResponse = bookingInfo.Select(
+                    booking =>
+                        new
+                        {
+                            Image = booking.AppointmentTime.Appointment.Doctor.Image,
+                            DoctorName = booking.AppointmentTime.Appointment.Doctor.FirstName,
+                            Specialize = booking.Specialization.Title,
+                            Day = booking.AppointmentTime.Appointment.Day.ToString(),
+                            Time = booking.AppointmentTime.Time.TimeValue.ToString("h:mm tt"),
+                            Price = booking.Price,
+                            DiscountCode = booking.Discount?.DiscountCode,
+                            FinalPrice = booking.FinalPrice,
+                            Status = booking.BookingStatus.Name.ToString()
+                        }
+                );
+
+                return Ok(
+                    new
+                    {
+                        succes = true,
+                        statusCode = 200,
+                        bookings = bookingResponse
                     }
                 );
             }
