@@ -126,5 +126,23 @@ namespace Infrastructure.Repositories
 
             return topSpecializationDto;
         }
+
+        public async Task<List<Booking>> GetBookingsByPatientIdAsync(
+            string patientId,
+            string[] includes = null
+        )
+        {
+            IQueryable<Booking> query = _appDbContext.Set<Booking>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return await query.Where(b => b.PatientId == patientId).ToListAsync();
+        }
     }
 }

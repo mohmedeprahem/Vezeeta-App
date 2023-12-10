@@ -15,5 +15,9 @@ namespace Application.Interfaces.Repositories
         public Task<Booking> GetBookingByIdAsync(int id, string[] includes = null);
         public Task<NumOfRequestsDto> GetBookingCountsAsync(string lastDate = "");
         public Task<List<TopSpecializationDto>> GetTopSpecializationByBooking();
+        public Task<List<Booking>> GetBookingsByPatientIdAsync(
+            string patientId,
+            string[] includes = null
+        );
     }
 }
