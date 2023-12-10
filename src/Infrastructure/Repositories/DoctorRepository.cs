@@ -126,5 +126,12 @@ namespace Infrastructure.Repositories
                 )
                 .CountAsync();
         }
+
+        public async Task<IdentityResult> DeleteDoctor(ApplicationUser doctor)
+        {
+            _appDbContext.Users.Remove(doctor);
+            await _appDbContext.SaveChangesAsync();
+            return IdentityResult.Success;
+        }
     }
 }

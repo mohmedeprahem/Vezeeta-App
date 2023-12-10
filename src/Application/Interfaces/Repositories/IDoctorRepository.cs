@@ -20,5 +20,6 @@ namespace Application.Interfaces.Repositories
         public Task<ApplicationUser> GetDoctorById(string id, string[] includes = null);
         public Task<IdentityResult> UpdateDoctor(ApplicationUser doctor);
         public Task<int> GetDoctorCountByString(string search = "");
+        public Task<IdentityResult> DeleteDoctor(ApplicationUser doctor);
     }
 }
