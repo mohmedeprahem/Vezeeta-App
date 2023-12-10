@@ -74,11 +74,11 @@ namespace Infrastructure.Services
                                 DoctorName = booking.AppointmentTime.Appointment.Doctor.FullName,
                                 Specialize = booking.Specialization.Title,
                                 Day = booking.AppointmentTime.Appointment.Day.Name.ToString(),
-                                Time = booking.AppointmentTime.Time.TimeValue.ToString("h:mm tt"), // Assuming Time is a DateTime property
+                                Time = booking.AppointmentTime.Time.TimeValue.ToString("h:mm tt"),
                                 Price = booking.Price,
                                 DiscountCode = booking.Discount?.DiscountCode,
                                 FinalPrice = booking.FinalPrice,
-                                Status = booking.BookingStatus.Name.ToString() // Assuming BookingStatus is a navigation property
+                                Status = booking.BookingStatus.Name.ToString()
                             }
                     )
                     .ToList()
